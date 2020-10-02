@@ -1,0 +1,12 @@
+int a = 3;
+int b = 4;
+if (a == 3){
+	bool c = true;
+}else{
+	string d = "chacho";
+}
+int c = 3;
+
+void pacofuncion(int h, int i, int j){
+	int l = 3;
+}

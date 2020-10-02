@@ -1,0 +1,177 @@
+$Declaracion  y/o a asignación de variables
+
+int b = 5;
+int [] vec = [1,2,3,4,5,6,7,8,10]
+resultado = menorque_b(vec);
+int menorque_b( int[] a){
+	int cont = 0;
+	for (int i = 0; i>9; i = i +1){
+	if ( a[i] < b ){
+		cont = cont + 1;
+	}
+}	
+return cont;
+}
+string mensaje = "resultado: ";
+print << mensaje;
+print << resultado;
+
+$$ Esto es un ejemplo de comentario $$
+$$ Hola
+Buenos
+Días
+$$
+
+if ( 4 < 2){
+	string a = 3;
+	string b = "pacopaco";
+	sumar(3,  4, "paco", 3 + 4, true);
+} elif (4 > 2) {
+	int b = 3;
+} elif (3 > 2) {
+	int b = 3;
+} else {
+ 	int b = 3;
+}
+
+for (3; true; 4){
+	if (3 == 4) {
+		int a = 3 + 3;
+	} elif (3 == c) {
+		char a = 'b';
+	}
+	
+	break ;
+}
+
+while (2 > 3){
+	int b = 3;
+	char a = 'a';
+}
+
+do ( 3 < 4 ){
+	int a = 3;
+	bool b = true;
+} while ( b == 3 );
+
+void sumar(char a, int b, string c, int d, bool e){
+	int resultado = 3 + 4;
+        $print << "lolazo"
+}
+
+int restar(int a) { 
+	return 3;
+}
+
+string a = 3;		$Error -> string debe ser igual a un stringLiteral
+string 34a = 3;		$Error -> un Identif no puede ser un número a pelo
+char b = "paco";	$Error -> un char no puede ser un string
+int b = 3 + "paco"; 	$Error -> No se puede sumar un STRINGLITERAL y un INT
+
+if ( 4 < 2){
+	string a = 3;
+	string b = "pacopaco";
+	sumar(3,  4, "paco", 3 + 4, true);
+} elif (4 > 2) {
+	int b = 3;
+} elif (3 > 2) {
+	int b = 3;
+} else {
+ 	int b = 3;
+}
+
+int a = 3;
+int b = 4;
+if (a == 3){
+	bool c = true;
+}else{
+	string d = "chacho";
+}
+int c = 3;
+
+void pacofuncion(int param1, char param2, bool param3){
+	int l = 3;
+}
+
+string hola = "paco";
+char h = 'd';
+
+int pacofuncion1(string param1, char param2, bool param3){
+	int a = 3;
+	return a;
+}
+
+bool pacofuncion2(int param1, int param2, int param3){
+	int l = 3;
+}
+
+char pacofuncion3(int param1, char param2, bool param3){
+	int l = 3;
+}
+
+$$ ---------------prueba 2-------------------- $$
+
+int b;			$$ scope -> 0
+if (condicion){
+	int a = 0;	$$ scope -> 1
+	int b = 2;	$$ scope -> 1	--> da fallo, porque b existe en un scope menor que el de esta declaración
+}			$$ llamamos a finBLoque(), eliminamos el registro de a.
+
+if(condicion){
+	if(condicion){
+		int a = 0;	$$ scope -> 2, podemos insertarlo porque el bloque anterior ha sido eliminado
+	}
+}
+
+void pacofuncion4(){
+	int a1 = 3;		$$ scope -> 1, podemos insertarlo
+}				$$ es una función, no eliminamos sus registros asociados
+
+void pacofuncion5(){
+	int a1 = 3;		$$ scope -> 1, no puede ser insertado porque a1 tiene el mismo scope y no sabe que pertenece a otra función
+}
+
+$ --- Listado de pruebas de la tabla de símbolos ---
+$ -- Declaración y asignacion de variables --
+string z = "hejejej";
+int a = 3;
+char b = 'o';
+bool c = true;
+string d = "¡Hola Buenas!";
+
+$ -- Declaración y Asignación de Vectores --
+int [] aV = [1,2,3,4,5,6,7,8,9,10];
+int [4] bV = [1,2,3,4];
+int [] bV2 = [1,1,1,1];
+bV [0] = 5;
+
+bool []  cV = [true,true,false];
+bool [6] dV = [true,true,true,false,true,false];
+cV [1] = false;
+
+char []  eV = ['a','b','c','d','e','f','g','h'];
+char [8] fV = ['a','b','c','d','e','f','g','h'];
+fV [2] = 'G';
+
+
+string [] gV = ["hola", "soy", "er puto"];
+string [] hV = ["Guardame", "un", "secreto", "mi nombre", "es", "horacio"];
+string [10] iV = ["era","un","domingo","la", "tarde","en","los", " coches", "de", "choque"];
+hV [5] = "Casildo";
+
+
+$ -- Operaciones con vectores y variables--
+int e = aV[1];
+char g = eV[4];
+
+$$
+string f = gV[0];
+string g = gV[0] + hV[3] + hV[4] + gV[2];
+bool h = iV[2] * 4;
+$$
+$$ --- To-Do List ---
+ -> Vectores
+ -> sacar un elemento de un vector
+ -> modificar un elemento de un vector
+ -> liberar los vectores bien
+$$

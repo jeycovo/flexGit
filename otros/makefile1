@@ -1,0 +1,7 @@
+makeStart: flex-jaguar.l bison-jaguar.y
+	flex flex-jaguar.l
+	bison -d bison-jaguar.y
+	bison bison-jaguar.y
+	gcc -o milex lex.yy.c bison-yaguar.tab.c 
+
+

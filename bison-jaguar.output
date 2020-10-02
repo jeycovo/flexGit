@@ -1,0 +1,5857 @@
+Terminales no usados en la gramática
+
+   PRINTF
+   PRINTFARROW
+   NOT
+
+
+La regla es inútil debido a los conflictos
+
+  128 $@12: %empty
+
+
+Estado 36 conflictos: 1 desplazamiento/reducción
+Estado 79 conflictos: 1 desplazamiento/reducción, 10 reducción/reducción
+Estado 93 conflictos: 12 reducción/reducción
+Estado 125 conflictos: 8 reducción/reducción
+Estado 131 conflictos: 2 reducción/reducción
+Estado 203 conflictos: 11 reducción/reducción
+Estado 282 conflictos: 12 reducción/reducción
+Estado 322 conflictos: 11 reducción/reducción
+Estado 396 conflictos: 1 desplazamiento/reducción, 9 reducción/reducción
+
+
+Gramática
+
+    0 $accept: programa $end
+
+    1 programa: bloque
+    2         | %empty
+
+    3 bloque: loopStructure
+    4       | instr
+    5       | conditionalStructure
+    6       | functionStructure
+    7       | error
+    8       | functionStructure bloque
+    9       | conditionalStructure bloque
+   10       | instr bloque
+   11       | error bloque
+   12       | loopStructure bloque
+
+   13 $@1: %empty
+
+   14 functionStructure: INT IDENTIF $@1 '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+   15 $@2: %empty
+
+   16 functionStructure: CHAR IDENTIF $@2 '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+   17 $@3: %empty
+
+   18 functionStructure: BOOL IDENTIF $@3 '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+   19 $@4: %empty
+
+   20 functionStructure: STRING IDENTIF $@4 '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+   21 $@5: %empty
+
+   22 functionStructure: VOID IDENTIF $@5 '(' functionParameter ')' '{' functionBlockEmpty '}'
+   23                  | functionCallStructure ';'
+
+   24 functionCallStructure: IDENTIF '(' functionCallParameter ')'
+
+   25 $@6: %empty
+
+   26 functionParameter: $@6 Parameter
+   27                  | %empty
+
+   28 Parameter: INT IDENTIF
+   29          | CHAR IDENTIF
+   30          | STRING IDENTIF
+   31          | BOOL IDENTIF
+   32          | INT IDENTIF ',' Parameter
+   33          | CHAR IDENTIF ',' Parameter
+   34          | STRING IDENTIF ',' Parameter
+   35          | BOOL IDENTIF ',' Parameter
+
+   36 functionCallParameter: IDENTIF
+   37                      | %empty
+   38                      | IDENTIF ',' functionCallParameter
+   39                      | expI ',' functionCallParameter
+   40                      | expB ',' functionCallParameter
+   41                      | expC ',' functionCallParameter
+   42                      | expS ',' functionCallParameter
+   43                      | expI
+   44                      | expB
+   45                      | expC
+   46                      | expS
+
+   47 functionBlockEmpty: %empty
+
+   48 $@7: %empty
+
+   49 functionBlockEmpty: $@7 functionBlock
+
+   50 functionBlock: loopStructure
+   51              | conditionalStructure
+   52              | functionStructure
+   53              | instr
+   54              | RETURN IDENTIF ';'
+   55              | RETURN expI ';'
+   56              | RETURN expB ';'
+   57              | RETURN expC ';'
+   58              | RETURN expS ';'
+   59              | instr functionBlock
+   60              | RETURN IDENTIF ';' functionBlock
+   61              | RETURN expI ';' functionBlock
+   62              | RETURN expB ';' functionBlock
+   63              | RETURN expC ';' functionBlock
+   64              | RETURN expS ';' functionBlock
+   65              | loopStructure functionBlock
+   66              | conditionalStructure functionBlock
+   67              | functionStructure functionBlock
+
+   68 conditionalStructure: ifStructure
+   69                     | ifStructure elifStructure
+   70                     | ifStructure elifStructure elseStructure
+   71                     | ifStructure elseStructure
+
+   72 ifStructure: IFCOND '(' expB ')' '{' ifBlockEmpty '}'
+
+   73 elifStructure: ELIF '(' expB ')' '{' ifBlockEmpty '}'
+   74              | ELIF '(' expB ')' '{' ifBlockEmpty '}' elifStructure
+
+   75 elseStructure: ELSECOND '{' ifBlockEmpty '}'
+
+   76 ifBlockEmpty: %empty
+
+   77 $@8: %empty
+
+   78 ifBlockEmpty: $@8 ifBlock
+
+   79 ifBlock: loopStructure
+   80        | conditionalStructure
+   81        | functionStructure
+   82        | instr
+   83        | loopBlock instr
+   84        | loopBlock loopStructure
+   85        | loopBlock conditionalStructure
+   86        | loopBlock functionStructure
+
+   87 loopStructure: FOR '(' expI ';' expB ';' expI ')' '{' loopBlockEmpty '}'
+   88              | DOLOOP '(' expB ')' '{' loopBlockEmpty '}' WHILELOOP '(' expB ')' ';'
+   89              | WHILELOOP '(' expB ')' '{' loopBlockEmpty '}'
+
+   90 loopBlockEmpty: %empty
+
+   91 $@9: %empty
+
+   92 loopBlockEmpty: $@9 loopBlock
+
+   93 loopBlock: loopStructure
+   94          | conditionalStructure
+   95          | functionStructure
+   96          | instr
+   97          | BREAK ';'
+   98          | CONTINUE ';'
+   99          | loopBlock BREAK ';'
+  100          | loopBlock CONTINUE ';'
+  101          | loopBlock instr
+  102          | loopBlock loopStructure
+  103          | loopBlock conditionalStructure
+  104          | loopBlock functionStructure
+
+  105 instr: dexp ';'
+  106      | declVI ';'
+  107      | declVC ';'
+  108      | declVB ';'
+  109      | declVS ';'
+
+  110 dexp: INT IDENTIF '=' expI
+  111     | BOOL IDENTIF '=' expB
+  112     | CHAR IDENTIF '=' expC
+  113     | STRING IDENTIF '=' expS
+  114     | INT IDENTIF '=' functionCallStructure
+  115     | BOOL IDENTIF '=' functionCallStructure
+  116     | CHAR IDENTIF '=' functionCallStructure
+  117     | STRING IDENTIF '=' functionCallStructure
+  118     | INT IDENTIF
+  119     | BOOL IDENTIF
+  120     | CHAR IDENTIF
+  121     | STRING IDENTIF
+
+  122 $@10: %empty
+
+  123 declVI: INT '[' ']' IDENTIF '=' $@10 '[' viContent ']'
+  124       | INT '[' ']' IDENTIF
+
+  125 $@11: %empty
+
+  126 declVI: INT '[' expI ']' IDENTIF '=' $@11 '[' viContent ']'
+  127       | INT '[' expI ']' IDENTIF
+
+  128 $@12: %empty
+
+  129 declVI: IDENTIF '=' $@12 '[' viContent ']'
+  130       | IDENTIF '[' expI ']' '=' expI
+
+  131 viContent: expI
+
+  132 $@13: %empty
+
+  133 viContent: expI $@13 ',' viContent
+
+  134 $@14: %empty
+
+  135 declVC: CHAR '[' ']' IDENTIF '=' $@14 '[' vcContent ']'
+  136       | CHAR '[' ']' IDENTIF
+
+  137 $@15: %empty
+
+  138 declVC: CHAR '[' expI ']' IDENTIF '=' $@15 '[' vcContent ']'
+  139       | CHAR '[' expI ']' IDENTIF
+
+  140 $@16: %empty
+
+  141 declVC: IDENTIF '=' $@16
+  142       | IDENTIF '[' expI ']' '=' expC
+
+  143 vcContent: expC
+
+  144 $@17: %empty
+
+  145 vcContent: expC $@17 ',' vcContent
+
+  146 $@18: %empty
+
+  147 declVS: STRING '[' ']' IDENTIF '=' $@18 '[' vsContent ']'
+  148       | STRING '[' ']' IDENTIF
+
+  149 $@19: %empty
+
+  150 declVS: STRING '[' expI ']' IDENTIF '=' $@19 '[' vsContent ']'
+  151       | STRING '[' expI ']' IDENTIF
+
+  152 $@20: %empty
+
+  153 declVS: IDENTIF '=' '[' vsContent ']' $@20
+  154       | IDENTIF '[' expI ']' '=' expS
+
+  155 vsContent: expS
+
+  156 $@21: %empty
+
+  157 vsContent: expS $@21 ',' vsContent
+
+  158 $@22: %empty
+
+  159 declVB: BOOL '[' ']' IDENTIF '=' $@22 '[' vbContent ']'
+  160       | BOOL '[' ']' IDENTIF
+
+  161 $@23: %empty
+
+  162 declVB: BOOL '[' expI ']' IDENTIF '=' $@23 '[' vbContent ']'
+  163       | BOOL '[' expI ']' IDENTIF
+
+  164 $@24: %empty
+
+  165 declVB: IDENTIF '=' '[' vbContent ']' $@24
+  166       | IDENTIF '[' expI ']' '=' expB
+
+  167 vbContent: expB
+
+  168 $@25: %empty
+
+  169 vbContent: expB $@25 ',' vbContent
+
+  170 expI: expI '+' expI
+  171     | expI '-' expI
+  172     | expI '*' expI
+  173     | expI '/' expI
+  174     | expI '^' expI
+  175     | '(' expI ')'
+  176     | NUMBER
+  177     | '-' NUMBER
+  178     | IDENTIF '[' NUMBER ']'
+  179     | IDENTIF
+
+  180 expS: expS '+' expS
+  181     | expI '*' expS
+  182     | expS '*' expI
+  183     | '(' expS ')'
+  184     | STRINGLITERAL
+  185     | IDENTIF '[' NUMBER ']'
+  186     | IDENTIF
+
+  187 expB: expB AND expB
+  188     | expB OR expB
+  189     | expB EQUIVALENT expB
+  190     | expI EQUIVALENT expI
+  191     | expC EQUIVALENT expC
+  192     | expS EQUIVALENT expS
+  193     | expB EQUIVALENTNOT expB
+  194     | expI EQUIVALENTNOT expI
+  195     | expC EQUIVALENTNOT expC
+  196     | expS EQUIVALENTNOT expS
+  197     | expI BIGGEREQUALTHAN expI
+  198     | expS BIGGEREQUALTHAN expS
+  199     | expI SMALLEREQUALTHAN expI
+  200     | expS SMALLEREQUALTHAN expS
+  201     | expS '>' expS
+  202     | expI '>' expI
+  203     | expS '<' expS
+  204     | expI '<' expI
+  205     | '(' expB ')'
+  206     | TRUE
+  207     | FALSE
+  208     | IDENTIF '[' NUMBER ']'
+  209     | IDENTIF
+
+  210 expC: CHARACTER
+  211     | IDENTIF '[' NUMBER ']'
+  212     | IDENTIF
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+'(' (40) 14 16 18 20 22 24 72 73 74 87 88 89 175 183 205
+')' (41) 14 16 18 20 22 24 72 73 74 87 88 89 175 183 205
+'*' (42) 172 181 182
+'+' (43) 170 180
+',' (44) 32 33 34 35 38 39 40 41 42 133 145 157 169
+'-' (45) 171 177
+'/' (47) 173
+';' (59) 23 54 55 56 57 58 60 61 62 63 64 87 88 97 98 99 100 105 106
+    107 108 109
+'<' (60) 203 204
+'=' (61) 110 111 112 113 114 115 116 117 123 126 129 130 135 138 141
+    142 147 150 153 154 159 162 165 166
+'>' (62) 201 202
+'[' (91) 123 124 126 127 129 130 135 136 138 139 142 147 148 150 151
+    153 154 159 160 162 163 165 166 178 185 208 211
+']' (93) 123 124 126 127 129 130 135 136 138 139 142 147 148 150 151
+    153 154 159 160 162 163 165 166 178 185 208 211
+'^' (94) 174
+'{' (123) 14 16 18 20 22 72 73 74 75 87 88 89
+'}' (125) 14 16 18 20 22 72 73 74 75 87 88 89
+error (256) 7 11
+VOID (258) 22
+INT (259) 14 28 32 110 114 118 123 124 126 127
+CHAR (260) 16 29 33 112 116 120 135 136 138 139
+BOOL (261) 18 31 35 111 115 119 159 160 162 163
+STRING (262) 20 30 34 113 117 121 147 148 150 151
+NUMBER (263) 176 177 178 185 208 211
+CHARACTER (264) 210
+IDENTIF (265) 14 16 18 20 22 24 28 29 30 31 32 33 34 35 36 38 54 60
+    110 111 112 113 114 115 116 117 118 119 120 121 123 124 126 127
+    129 130 135 136 138 139 141 142 147 148 150 151 153 154 159 160
+    162 163 165 166 178 179 185 186 208 209 211 212
+STRINGLITERAL (266) 184
+RETURN (267) 54 55 56 57 58 60 61 62 63 64
+IFCOND (268) 72
+ELIF (269) 73 74
+ELSECOND (270) 75
+FOR (271) 87
+WHILELOOP (272) 88 89
+DOLOOP (273) 88
+BREAK (274) 97 99
+CONTINUE (275) 98 100
+PRINTF (276)
+PRINTFARROW (277)
+SMALLEREQUALTHAN (278) 199 200
+BIGGEREQUALTHAN (279) 197 198
+EQUIVALENT (280) 189 190 191 192
+EQUIVALENTNOT (281) 193 194 195 196
+AND (282) 187
+OR (283) 188
+NOT (284)
+TRUE (285) 206
+FALSE (286) 207
+
+
+No terminales con las reglas donde aparecen
+
+$accept (48)
+    en la izquierda: 0
+programa (49)
+    en la izquierda: 1 2, en la derecha: 0
+bloque (50)
+    en la izquierda: 3 4 5 6 7 8 9 10 11 12, en la derecha: 1 8 9 10
+    11 12
+functionStructure (51)
+    en la izquierda: 14 16 18 20 22 23, en la derecha: 6 8 52 67 81
+    86 95 104
+$@1 (52)
+    en la izquierda: 13, en la derecha: 14
+$@2 (53)
+    en la izquierda: 15, en la derecha: 16
+$@3 (54)
+    en la izquierda: 17, en la derecha: 18
+$@4 (55)
+    en la izquierda: 19, en la derecha: 20
+$@5 (56)
+    en la izquierda: 21, en la derecha: 22
+functionCallStructure (57)
+    en la izquierda: 24, en la derecha: 23 114 115 116 117
+functionParameter (58)
+    en la izquierda: 26 27, en la derecha: 14 16 18 20 22
+$@6 (59)
+    en la izquierda: 25, en la derecha: 26
+Parameter (60)
+    en la izquierda: 28 29 30 31 32 33 34 35, en la derecha: 26 32
+    33 34 35
+functionCallParameter (61)
+    en la izquierda: 36 37 38 39 40 41 42 43 44 45 46, en la derecha:
+    24 38 39 40 41 42
+functionBlockEmpty (62)
+    en la izquierda: 47 49, en la derecha: 14 16 18 20 22
+$@7 (63)
+    en la izquierda: 48, en la derecha: 49
+functionBlock (64)
+    en la izquierda: 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65
+    66 67, en la derecha: 49 59 60 61 62 63 64 65 66 67
+conditionalStructure (65)
+    en la izquierda: 68 69 70 71, en la derecha: 5 9 51 66 80 85 94
+    103
+ifStructure (66)
+    en la izquierda: 72, en la derecha: 68 69 70 71
+elifStructure (67)
+    en la izquierda: 73 74, en la derecha: 69 70 74
+elseStructure (68)
+    en la izquierda: 75, en la derecha: 70 71
+ifBlockEmpty (69)
+    en la izquierda: 76 78, en la derecha: 72 73 74 75
+$@8 (70)
+    en la izquierda: 77, en la derecha: 78
+ifBlock (71)
+    en la izquierda: 79 80 81 82 83 84 85 86, en la derecha: 78
+loopStructure (72)
+    en la izquierda: 87 88 89, en la derecha: 3 12 50 65 79 84 93 102
+loopBlockEmpty (73)
+    en la izquierda: 90 92, en la derecha: 87 88 89
+$@9 (74)
+    en la izquierda: 91, en la derecha: 92
+loopBlock (75)
+    en la izquierda: 93 94 95 96 97 98 99 100 101 102 103 104, en la derecha:
+    83 84 85 86 92 99 100 101 102 103 104
+instr (76)
+    en la izquierda: 105 106 107 108 109, en la derecha: 4 10 53 59
+    82 83 96 101
+dexp (77)
+    en la izquierda: 110 111 112 113 114 115 116 117 118 119 120 121,
+    en la derecha: 105
+declVI (78)
+    en la izquierda: 123 124 126 127 129 130, en la derecha: 106
+$@10 (79)
+    en la izquierda: 122, en la derecha: 123
+$@11 (80)
+    en la izquierda: 125, en la derecha: 126
+$@12 (81)
+    en la izquierda: 128, en la derecha: 129
+viContent (82)
+    en la izquierda: 131 133, en la derecha: 123 126 129 133
+$@13 (83)
+    en la izquierda: 132, en la derecha: 133
+declVC (84)
+    en la izquierda: 135 136 138 139 141 142, en la derecha: 107
+$@14 (85)
+    en la izquierda: 134, en la derecha: 135
+$@15 (86)
+    en la izquierda: 137, en la derecha: 138
+$@16 (87)
+    en la izquierda: 140, en la derecha: 141
+vcContent (88)
+    en la izquierda: 143 145, en la derecha: 135 138 145
+$@17 (89)
+    en la izquierda: 144, en la derecha: 145
+declVS (90)
+    en la izquierda: 147 148 150 151 153 154, en la derecha: 109
+$@18 (91)
+    en la izquierda: 146, en la derecha: 147
+$@19 (92)
+    en la izquierda: 149, en la derecha: 150
+$@20 (93)
+    en la izquierda: 152, en la derecha: 153
+vsContent (94)
+    en la izquierda: 155 157, en la derecha: 147 150 153 157
+$@21 (95)
+    en la izquierda: 156, en la derecha: 157
+declVB (96)
+    en la izquierda: 159 160 162 163 165 166, en la derecha: 108
+$@22 (97)
+    en la izquierda: 158, en la derecha: 159
+$@23 (98)
+    en la izquierda: 161, en la derecha: 162
+$@24 (99)
+    en la izquierda: 164, en la derecha: 165
+vbContent (100)
+    en la izquierda: 167 169, en la derecha: 159 162 165 169
+$@25 (101)
+    en la izquierda: 168, en la derecha: 169
+expI (102)
+    en la izquierda: 170 171 172 173 174 175 176 177 178 179, en la derecha:
+    39 43 55 61 87 110 126 127 130 131 133 138 139 142 150 151 154
+    162 163 166 170 171 172 173 174 175 181 182 190 194 197 199 202
+    204
+expS (103)
+    en la izquierda: 180 181 182 183 184 185 186, en la derecha: 42
+    46 58 64 113 154 155 157 180 181 182 183 192 196 198 200 201 203
+expB (104)
+    en la izquierda: 187 188 189 190 191 192 193 194 195 196 197 198
+    199 200 201 202 203 204 205 206 207 208 209, en la derecha: 40
+    44 56 62 72 73 74 87 88 89 111 166 167 169 187 188 189 193 205
+expC (105)
+    en la izquierda: 210 211 212, en la derecha: 41 45 57 63 112 142
+    143 145 191 195
+
+
+Estado 0
+
+    0 $accept: . programa $end
+
+    error      desplazar e ir al estado 1
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $end  reduce usando la regla 2 (programa)
+
+    programa               ir al estado 12
+    bloque                 ir al estado 13
+    functionStructure      ir al estado 14
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 16
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 18
+    instr                  ir al estado 19
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 1
+
+    7 bloque: error .
+   11       | error . bloque
+
+    error      desplazar e ir al estado 1
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $end  reduce usando la regla 7 (bloque)
+
+    bloque                 ir al estado 25
+    functionStructure      ir al estado 14
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 16
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 18
+    instr                  ir al estado 19
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 2
+
+   22 functionStructure: VOID . IDENTIF $@5 '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+    IDENTIF  desplazar e ir al estado 26
+
+
+Estado 3
+
+   14 functionStructure: INT . IDENTIF $@1 '(' functionParameter ')' '{' functionBlockEmpty '}'
+  110 dexp: INT . IDENTIF '=' expI
+  114     | INT . IDENTIF '=' functionCallStructure
+  118     | INT . IDENTIF
+  123 declVI: INT . '[' ']' IDENTIF '=' $@10 '[' viContent ']'
+  124       | INT . '[' ']' IDENTIF
+  126       | INT . '[' expI ']' IDENTIF '=' $@11 '[' viContent ']'
+  127       | INT . '[' expI ']' IDENTIF
+
+    IDENTIF  desplazar e ir al estado 27
+    '['      desplazar e ir al estado 28
+
+
+Estado 4
+
+   16 functionStructure: CHAR . IDENTIF $@2 '(' functionParameter ')' '{' functionBlockEmpty '}'
+  112 dexp: CHAR . IDENTIF '=' expC
+  116     | CHAR . IDENTIF '=' functionCallStructure
+  120     | CHAR . IDENTIF
+  135 declVC: CHAR . '[' ']' IDENTIF '=' $@14 '[' vcContent ']'
+  136       | CHAR . '[' ']' IDENTIF
+  138       | CHAR . '[' expI ']' IDENTIF '=' $@15 '[' vcContent ']'
+  139       | CHAR . '[' expI ']' IDENTIF
+
+    IDENTIF  desplazar e ir al estado 29
+    '['      desplazar e ir al estado 30
+
+
+Estado 5
+
+   18 functionStructure: BOOL . IDENTIF $@3 '(' functionParameter ')' '{' functionBlockEmpty '}'
+  111 dexp: BOOL . IDENTIF '=' expB
+  115     | BOOL . IDENTIF '=' functionCallStructure
+  119     | BOOL . IDENTIF
+  159 declVB: BOOL . '[' ']' IDENTIF '=' $@22 '[' vbContent ']'
+  160       | BOOL . '[' ']' IDENTIF
+  162       | BOOL . '[' expI ']' IDENTIF '=' $@23 '[' vbContent ']'
+  163       | BOOL . '[' expI ']' IDENTIF
+
+    IDENTIF  desplazar e ir al estado 31
+    '['      desplazar e ir al estado 32
+
+
+Estado 6
+
+   20 functionStructure: STRING . IDENTIF $@4 '(' functionParameter ')' '{' functionBlockEmpty '}'
+  113 dexp: STRING . IDENTIF '=' expS
+  117     | STRING . IDENTIF '=' functionCallStructure
+  121     | STRING . IDENTIF
+  147 declVS: STRING . '[' ']' IDENTIF '=' $@18 '[' vsContent ']'
+  148       | STRING . '[' ']' IDENTIF
+  150       | STRING . '[' expI ']' IDENTIF '=' $@19 '[' vsContent ']'
+  151       | STRING . '[' expI ']' IDENTIF
+
+    IDENTIF  desplazar e ir al estado 33
+    '['      desplazar e ir al estado 34
+
+
+Estado 7
+
+   24 functionCallStructure: IDENTIF . '(' functionCallParameter ')'
+  129 declVI: IDENTIF . '=' $@12 '[' viContent ']'
+  130       | IDENTIF . '[' expI ']' '=' expI
+  141 declVC: IDENTIF . '=' $@16
+  142       | IDENTIF . '[' expI ']' '=' expC
+  153 declVS: IDENTIF . '=' '[' vsContent ']' $@20
+  154       | IDENTIF . '[' expI ']' '=' expS
+  165 declVB: IDENTIF . '=' '[' vbContent ']' $@24
+  166       | IDENTIF . '[' expI ']' '=' expB
+
+    '('  desplazar e ir al estado 35
+    '='  desplazar e ir al estado 36
+    '['  desplazar e ir al estado 37
+
+
+Estado 8
+
+   72 ifStructure: IFCOND . '(' expB ')' '{' ifBlockEmpty '}'
+
+    '('  desplazar e ir al estado 38
+
+
+Estado 9
+
+   87 loopStructure: FOR . '(' expI ';' expB ';' expI ')' '{' loopBlockEmpty '}'
+
+    '('  desplazar e ir al estado 39
+
+
+Estado 10
+
+   89 loopStructure: WHILELOOP . '(' expB ')' '{' loopBlockEmpty '}'
+
+    '('  desplazar e ir al estado 40
+
+
+Estado 11
+
+   88 loopStructure: DOLOOP . '(' expB ')' '{' loopBlockEmpty '}' WHILELOOP '(' expB ')' ';'
+
+    '('  desplazar e ir al estado 41
+
+
+Estado 12
+
+    0 $accept: programa . $end
+
+    $end  desplazar e ir al estado 42
+
+
+Estado 13
+
+    1 programa: bloque .
+
+    $default  reduce usando la regla 1 (programa)
+
+
+Estado 14
+
+    6 bloque: functionStructure .
+    8       | functionStructure . bloque
+
+    error      desplazar e ir al estado 1
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $end  reduce usando la regla 6 (bloque)
+
+    bloque                 ir al estado 43
+    functionStructure      ir al estado 14
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 16
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 18
+    instr                  ir al estado 19
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 15
+
+   23 functionStructure: functionCallStructure . ';'
+
+    ';'  desplazar e ir al estado 44
+
+
+Estado 16
+
+    5 bloque: conditionalStructure .
+    9       | conditionalStructure . bloque
+
+    error      desplazar e ir al estado 1
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $end  reduce usando la regla 5 (bloque)
+
+    bloque                 ir al estado 45
+    functionStructure      ir al estado 14
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 16
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 18
+    instr                  ir al estado 19
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 17
+
+   68 conditionalStructure: ifStructure .
+   69                     | ifStructure . elifStructure
+   70                     | ifStructure . elifStructure elseStructure
+   71                     | ifStructure . elseStructure
+
+    ELIF      desplazar e ir al estado 46
+    ELSECOND  desplazar e ir al estado 47
+
+    $default  reduce usando la regla 68 (conditionalStructure)
+
+    elifStructure  ir al estado 48
+    elseStructure  ir al estado 49
+
+
+Estado 18
+
+    3 bloque: loopStructure .
+   12       | loopStructure . bloque
+
+    error      desplazar e ir al estado 1
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $end  reduce usando la regla 3 (bloque)
+
+    bloque                 ir al estado 50
+    functionStructure      ir al estado 14
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 16
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 18
+    instr                  ir al estado 19
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 19
+
+    4 bloque: instr .
+   10       | instr . bloque
+
+    error      desplazar e ir al estado 1
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $end  reduce usando la regla 4 (bloque)
+
+    bloque                 ir al estado 51
+    functionStructure      ir al estado 14
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 16
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 18
+    instr                  ir al estado 19
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 20
+
+  105 instr: dexp . ';'
+
+    ';'  desplazar e ir al estado 52
+
+
+Estado 21
+
+  106 instr: declVI . ';'
+
+    ';'  desplazar e ir al estado 53
+
+
+Estado 22
+
+  107 instr: declVC . ';'
+
+    ';'  desplazar e ir al estado 54
+
+
+Estado 23
+
+  109 instr: declVS . ';'
+
+    ';'  desplazar e ir al estado 55
+
+
+Estado 24
+
+  108 instr: declVB . ';'
+
+    ';'  desplazar e ir al estado 56
+
+
+Estado 25
+
+   11 bloque: error bloque .
+
+    $default  reduce usando la regla 11 (bloque)
+
+
+Estado 26
+
+   22 functionStructure: VOID IDENTIF . $@5 '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+    $default  reduce usando la regla 21 ($@5)
+
+    $@5  ir al estado 57
+
+
+Estado 27
+
+   14 functionStructure: INT IDENTIF . $@1 '(' functionParameter ')' '{' functionBlockEmpty '}'
+  110 dexp: INT IDENTIF . '=' expI
+  114     | INT IDENTIF . '=' functionCallStructure
+  118     | INT IDENTIF .
+
+    '='  desplazar e ir al estado 58
+
+    ';'       reduce usando la regla 118 (dexp)
+    $default  reduce usando la regla 13 ($@1)
+
+    $@1  ir al estado 59
+
+
+Estado 28
+
+  123 declVI: INT '[' . ']' IDENTIF '=' $@10 '[' viContent ']'
+  124       | INT '[' . ']' IDENTIF
+  126       | INT '[' . expI ']' IDENTIF '=' $@11 '[' viContent ']'
+  127       | INT '[' . expI ']' IDENTIF
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+    ']'      desplazar e ir al estado 64
+
+    expI  ir al estado 65
+
+
+Estado 29
+
+   16 functionStructure: CHAR IDENTIF . $@2 '(' functionParameter ')' '{' functionBlockEmpty '}'
+  112 dexp: CHAR IDENTIF . '=' expC
+  116     | CHAR IDENTIF . '=' functionCallStructure
+  120     | CHAR IDENTIF .
+
+    '='  desplazar e ir al estado 66
+
+    ';'       reduce usando la regla 120 (dexp)
+    $default  reduce usando la regla 15 ($@2)
+
+    $@2  ir al estado 67
+
+
+Estado 30
+
+  135 declVC: CHAR '[' . ']' IDENTIF '=' $@14 '[' vcContent ']'
+  136       | CHAR '[' . ']' IDENTIF
+  138       | CHAR '[' . expI ']' IDENTIF '=' $@15 '[' vcContent ']'
+  139       | CHAR '[' . expI ']' IDENTIF
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+    ']'      desplazar e ir al estado 68
+
+    expI  ir al estado 69
+
+
+Estado 31
+
+   18 functionStructure: BOOL IDENTIF . $@3 '(' functionParameter ')' '{' functionBlockEmpty '}'
+  111 dexp: BOOL IDENTIF . '=' expB
+  115     | BOOL IDENTIF . '=' functionCallStructure
+  119     | BOOL IDENTIF .
+
+    '='  desplazar e ir al estado 70
+
+    ';'       reduce usando la regla 119 (dexp)
+    $default  reduce usando la regla 17 ($@3)
+
+    $@3  ir al estado 71
+
+
+Estado 32
+
+  159 declVB: BOOL '[' . ']' IDENTIF '=' $@22 '[' vbContent ']'
+  160       | BOOL '[' . ']' IDENTIF
+  162       | BOOL '[' . expI ']' IDENTIF '=' $@23 '[' vbContent ']'
+  163       | BOOL '[' . expI ']' IDENTIF
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+    ']'      desplazar e ir al estado 72
+
+    expI  ir al estado 73
+
+
+Estado 33
+
+   20 functionStructure: STRING IDENTIF . $@4 '(' functionParameter ')' '{' functionBlockEmpty '}'
+  113 dexp: STRING IDENTIF . '=' expS
+  117     | STRING IDENTIF . '=' functionCallStructure
+  121     | STRING IDENTIF .
+
+    '='  desplazar e ir al estado 74
+
+    ';'       reduce usando la regla 121 (dexp)
+    $default  reduce usando la regla 19 ($@4)
+
+    $@4  ir al estado 75
+
+
+Estado 34
+
+  147 declVS: STRING '[' . ']' IDENTIF '=' $@18 '[' vsContent ']'
+  148       | STRING '[' . ']' IDENTIF
+  150       | STRING '[' . expI ']' IDENTIF '=' $@19 '[' vsContent ']'
+  151       | STRING '[' . expI ']' IDENTIF
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+    ']'      desplazar e ir al estado 76
+
+    expI  ir al estado 77
+
+
+Estado 35
+
+   24 functionCallStructure: IDENTIF '(' . functionCallParameter ')'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 79
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    $default  reduce usando la regla 37 (functionCallParameter)
+
+    functionCallParameter  ir al estado 84
+    expI                   ir al estado 85
+    expS                   ir al estado 86
+    expB                   ir al estado 87
+    expC                   ir al estado 88
+
+
+Estado 36
+
+  129 declVI: IDENTIF '=' . $@12 '[' viContent ']'
+  141 declVC: IDENTIF '=' . $@16
+  153 declVS: IDENTIF '=' . '[' vsContent ']' $@20
+  165 declVB: IDENTIF '=' . '[' vbContent ']' $@24
+
+    '['  desplazar e ir al estado 89
+
+    '['       [reduce usando la regla 128 ($@12)]
+    $default  reduce usando la regla 140 ($@16)
+
+    $@12  ir al estado 90
+    $@16  ir al estado 91
+
+
+Estado 37
+
+  130 declVI: IDENTIF '[' . expI ']' '=' expI
+  142 declVC: IDENTIF '[' . expI ']' '=' expC
+  154 declVS: IDENTIF '[' . expI ']' '=' expS
+  166 declVB: IDENTIF '[' . expI ']' '=' expB
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 92
+
+
+Estado 38
+
+   72 ifStructure: IFCOND '(' . expB ')' '{' ifBlockEmpty '}'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 96
+    expC  ir al estado 97
+
+
+Estado 39
+
+   87 loopStructure: FOR '(' . expI ';' expB ';' expI ')' '{' loopBlockEmpty '}'
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 98
+
+
+Estado 40
+
+   89 loopStructure: WHILELOOP '(' . expB ')' '{' loopBlockEmpty '}'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 99
+    expC  ir al estado 97
+
+
+Estado 41
+
+   88 loopStructure: DOLOOP '(' . expB ')' '{' loopBlockEmpty '}' WHILELOOP '(' expB ')' ';'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 100
+    expC  ir al estado 97
+
+
+Estado 42
+
+    0 $accept: programa $end .
+
+    $default  aceptar
+
+
+Estado 43
+
+    8 bloque: functionStructure bloque .
+
+    $default  reduce usando la regla 8 (bloque)
+
+
+Estado 44
+
+   23 functionStructure: functionCallStructure ';' .
+
+    $default  reduce usando la regla 23 (functionStructure)
+
+
+Estado 45
+
+    9 bloque: conditionalStructure bloque .
+
+    $default  reduce usando la regla 9 (bloque)
+
+
+Estado 46
+
+   73 elifStructure: ELIF . '(' expB ')' '{' ifBlockEmpty '}'
+   74              | ELIF . '(' expB ')' '{' ifBlockEmpty '}' elifStructure
+
+    '('  desplazar e ir al estado 101
+
+
+Estado 47
+
+   75 elseStructure: ELSECOND . '{' ifBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 102
+
+
+Estado 48
+
+   69 conditionalStructure: ifStructure elifStructure .
+   70                     | ifStructure elifStructure . elseStructure
+
+    ELSECOND  desplazar e ir al estado 47
+
+    $default  reduce usando la regla 69 (conditionalStructure)
+
+    elseStructure  ir al estado 103
+
+
+Estado 49
+
+   71 conditionalStructure: ifStructure elseStructure .
+
+    $default  reduce usando la regla 71 (conditionalStructure)
+
+
+Estado 50
+
+   12 bloque: loopStructure bloque .
+
+    $default  reduce usando la regla 12 (bloque)
+
+
+Estado 51
+
+   10 bloque: instr bloque .
+
+    $default  reduce usando la regla 10 (bloque)
+
+
+Estado 52
+
+  105 instr: dexp ';' .
+
+    $default  reduce usando la regla 105 (instr)
+
+
+Estado 53
+
+  106 instr: declVI ';' .
+
+    $default  reduce usando la regla 106 (instr)
+
+
+Estado 54
+
+  107 instr: declVC ';' .
+
+    $default  reduce usando la regla 107 (instr)
+
+
+Estado 55
+
+  109 instr: declVS ';' .
+
+    $default  reduce usando la regla 109 (instr)
+
+
+Estado 56
+
+  108 instr: declVB ';' .
+
+    $default  reduce usando la regla 108 (instr)
+
+
+Estado 57
+
+   22 functionStructure: VOID IDENTIF $@5 . '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+    '('  desplazar e ir al estado 104
+
+
+Estado 58
+
+  110 dexp: INT IDENTIF '=' . expI
+  114     | INT IDENTIF '=' . functionCallStructure
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 105
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    functionCallStructure  ir al estado 106
+    expI                   ir al estado 107
+
+
+Estado 59
+
+   14 functionStructure: INT IDENTIF $@1 . '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+    '('  desplazar e ir al estado 108
+
+
+Estado 60
+
+  176 expI: NUMBER .
+
+    $default  reduce usando la regla 176 (expI)
+
+
+Estado 61
+
+  178 expI: IDENTIF . '[' NUMBER ']'
+  179     | IDENTIF .
+
+    '['  desplazar e ir al estado 109
+
+    $default  reduce usando la regla 179 (expI)
+
+
+Estado 62
+
+  177 expI: '-' . NUMBER
+
+    NUMBER  desplazar e ir al estado 110
+
+
+Estado 63
+
+  175 expI: '(' . expI ')'
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 111
+
+
+Estado 64
+
+  123 declVI: INT '[' ']' . IDENTIF '=' $@10 '[' viContent ']'
+  124       | INT '[' ']' . IDENTIF
+
+    IDENTIF  desplazar e ir al estado 112
+
+
+Estado 65
+
+  126 declVI: INT '[' expI . ']' IDENTIF '=' $@11 '[' viContent ']'
+  127       | INT '[' expI . ']' IDENTIF
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ']'  desplazar e ir al estado 118
+
+
+Estado 66
+
+  112 dexp: CHAR IDENTIF '=' . expC
+  116     | CHAR IDENTIF '=' . functionCallStructure
+
+    CHARACTER  desplazar e ir al estado 78
+    IDENTIF    desplazar e ir al estado 119
+
+    functionCallStructure  ir al estado 120
+    expC                   ir al estado 121
+
+
+Estado 67
+
+   16 functionStructure: CHAR IDENTIF $@2 . '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+    '('  desplazar e ir al estado 122
+
+
+Estado 68
+
+  135 declVC: CHAR '[' ']' . IDENTIF '=' $@14 '[' vcContent ']'
+  136       | CHAR '[' ']' . IDENTIF
+
+    IDENTIF  desplazar e ir al estado 123
+
+
+Estado 69
+
+  138 declVC: CHAR '[' expI . ']' IDENTIF '=' $@15 '[' vcContent ']'
+  139       | CHAR '[' expI . ']' IDENTIF
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ']'  desplazar e ir al estado 124
+
+
+Estado 70
+
+  111 dexp: BOOL IDENTIF '=' . expB
+  115     | BOOL IDENTIF '=' . functionCallStructure
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 125
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    functionCallStructure  ir al estado 126
+    expI                   ir al estado 94
+    expS                   ir al estado 95
+    expB                   ir al estado 127
+    expC                   ir al estado 97
+
+
+Estado 71
+
+   18 functionStructure: BOOL IDENTIF $@3 . '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+    '('  desplazar e ir al estado 128
+
+
+Estado 72
+
+  159 declVB: BOOL '[' ']' . IDENTIF '=' $@22 '[' vbContent ']'
+  160       | BOOL '[' ']' . IDENTIF
+
+    IDENTIF  desplazar e ir al estado 129
+
+
+Estado 73
+
+  162 declVB: BOOL '[' expI . ']' IDENTIF '=' $@23 '[' vbContent ']'
+  163       | BOOL '[' expI . ']' IDENTIF
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ']'  desplazar e ir al estado 130
+
+
+Estado 74
+
+  113 dexp: STRING IDENTIF '=' . expS
+  117     | STRING IDENTIF '=' . functionCallStructure
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 131
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    functionCallStructure  ir al estado 133
+    expI                   ir al estado 134
+    expS                   ir al estado 135
+
+
+Estado 75
+
+   20 functionStructure: STRING IDENTIF $@4 . '(' functionParameter ')' '{' functionBlockEmpty '}'
+
+    '('  desplazar e ir al estado 136
+
+
+Estado 76
+
+  147 declVS: STRING '[' ']' . IDENTIF '=' $@18 '[' vsContent ']'
+  148       | STRING '[' ']' . IDENTIF
+
+    IDENTIF  desplazar e ir al estado 137
+
+
+Estado 77
+
+  150 declVS: STRING '[' expI . ']' IDENTIF '=' $@19 '[' vsContent ']'
+  151       | STRING '[' expI . ']' IDENTIF
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ']'  desplazar e ir al estado 138
+
+
+Estado 78
+
+  210 expC: CHARACTER .
+
+    $default  reduce usando la regla 210 (expC)
+
+
+Estado 79
+
+   36 functionCallParameter: IDENTIF .
+   38                      | IDENTIF . ',' functionCallParameter
+  178 expI: IDENTIF . '[' NUMBER ']'
+  179     | IDENTIF .
+  185 expS: IDENTIF . '[' NUMBER ']'
+  186     | IDENTIF .
+  208 expB: IDENTIF . '[' NUMBER ']'
+  209     | IDENTIF .
+  211 expC: IDENTIF . '[' NUMBER ']'
+  212     | IDENTIF .
+
+    ','  desplazar e ir al estado 139
+    '['  desplazar e ir al estado 140
+
+    SMALLEREQUALTHAN  reduce usando la regla 179 (expI)
+    SMALLEREQUALTHAN  [reduce usando la regla 186 (expS)]
+    BIGGEREQUALTHAN   reduce usando la regla 179 (expI)
+    BIGGEREQUALTHAN   [reduce usando la regla 186 (expS)]
+    EQUIVALENT        reduce usando la regla 179 (expI)
+    EQUIVALENT        [reduce usando la regla 186 (expS)]
+    EQUIVALENT        [reduce usando la regla 209 (expB)]
+    EQUIVALENT        [reduce usando la regla 212 (expC)]
+    EQUIVALENTNOT     reduce usando la regla 179 (expI)
+    EQUIVALENTNOT     [reduce usando la regla 186 (expS)]
+    EQUIVALENTNOT     [reduce usando la regla 209 (expB)]
+    EQUIVALENTNOT     [reduce usando la regla 212 (expC)]
+    AND               reduce usando la regla 209 (expB)
+    OR                reduce usando la regla 209 (expB)
+    '>'               reduce usando la regla 179 (expI)
+    '>'               [reduce usando la regla 186 (expS)]
+    '<'               reduce usando la regla 179 (expI)
+    '<'               [reduce usando la regla 186 (expS)]
+    '+'               reduce usando la regla 179 (expI)
+    '+'               [reduce usando la regla 186 (expS)]
+    '*'               reduce usando la regla 179 (expI)
+    '*'               [reduce usando la regla 186 (expS)]
+    ')'               reduce usando la regla 36 (functionCallParameter)
+    ')'               [reduce usando la regla 179 (expI)]
+    ')'               [reduce usando la regla 186 (expS)]
+    ')'               [reduce usando la regla 209 (expB)]
+    ')'               [reduce usando la regla 212 (expC)]
+    ','               [reduce usando la regla 179 (expI)]
+    ','               [reduce usando la regla 186 (expS)]
+    ','               [reduce usando la regla 209 (expB)]
+    ','               [reduce usando la regla 212 (expC)]
+    $default          reduce usando la regla 179 (expI)
+
+
+Estado 80
+
+  184 expS: STRINGLITERAL .
+
+    $default  reduce usando la regla 184 (expS)
+
+
+Estado 81
+
+  206 expB: TRUE .
+
+    $default  reduce usando la regla 206 (expB)
+
+
+Estado 82
+
+  207 expB: FALSE .
+
+    $default  reduce usando la regla 207 (expB)
+
+
+Estado 83
+
+  175 expI: '(' . expI ')'
+  183 expS: '(' . expS ')'
+  205 expB: '(' . expB ')'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 141
+    expS  ir al estado 142
+    expB  ir al estado 143
+    expC  ir al estado 97
+
+
+Estado 84
+
+   24 functionCallStructure: IDENTIF '(' functionCallParameter . ')'
+
+    ')'  desplazar e ir al estado 144
+
+
+Estado 85
+
+   39 functionCallParameter: expI . ',' functionCallParameter
+   43                      | expI .
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  181 expS: expI . '*' expS
+  190 expB: expI . EQUIVALENT expI
+  194     | expI . EQUIVALENTNOT expI
+  197     | expI . BIGGEREQUALTHAN expI
+  199     | expI . SMALLEREQUALTHAN expI
+  202     | expI . '>' expI
+  204     | expI . '<' expI
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 145
+    BIGGEREQUALTHAN   desplazar e ir al estado 146
+    EQUIVALENT        desplazar e ir al estado 147
+    EQUIVALENTNOT     desplazar e ir al estado 148
+    '>'               desplazar e ir al estado 149
+    '<'               desplazar e ir al estado 150
+    '+'               desplazar e ir al estado 113
+    '-'               desplazar e ir al estado 114
+    '*'               desplazar e ir al estado 151
+    '/'               desplazar e ir al estado 116
+    '^'               desplazar e ir al estado 117
+    ','               desplazar e ir al estado 152
+
+    $default  reduce usando la regla 43 (functionCallParameter)
+
+
+Estado 86
+
+   42 functionCallParameter: expS . ',' functionCallParameter
+   46                      | expS .
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  192 expB: expS . EQUIVALENT expS
+  196     | expS . EQUIVALENTNOT expS
+  198     | expS . BIGGEREQUALTHAN expS
+  200     | expS . SMALLEREQUALTHAN expS
+  201     | expS . '>' expS
+  203     | expS . '<' expS
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 153
+    BIGGEREQUALTHAN   desplazar e ir al estado 154
+    EQUIVALENT        desplazar e ir al estado 155
+    EQUIVALENTNOT     desplazar e ir al estado 156
+    '>'               desplazar e ir al estado 157
+    '<'               desplazar e ir al estado 158
+    '+'               desplazar e ir al estado 159
+    '*'               desplazar e ir al estado 160
+    ','               desplazar e ir al estado 161
+
+    $default  reduce usando la regla 46 (functionCallParameter)
+
+
+Estado 87
+
+   40 functionCallParameter: expB . ',' functionCallParameter
+   44                      | expB .
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ','            desplazar e ir al estado 166
+
+    $default  reduce usando la regla 44 (functionCallParameter)
+
+
+Estado 88
+
+   41 functionCallParameter: expC . ',' functionCallParameter
+   45                      | expC .
+  191 expB: expC . EQUIVALENT expC
+  195     | expC . EQUIVALENTNOT expC
+
+    EQUIVALENT     desplazar e ir al estado 167
+    EQUIVALENTNOT  desplazar e ir al estado 168
+    ','            desplazar e ir al estado 169
+
+    $default  reduce usando la regla 45 (functionCallParameter)
+
+
+Estado 89
+
+  153 declVS: IDENTIF '=' '[' . vsContent ']' $@20
+  165 declVB: IDENTIF '=' '[' . vbContent ']' $@24
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    vsContent  ir al estado 170
+    vbContent  ir al estado 171
+    expI       ir al estado 94
+    expS       ir al estado 172
+    expB       ir al estado 173
+    expC       ir al estado 97
+
+
+Estado 90
+
+  129 declVI: IDENTIF '=' $@12 . '[' viContent ']'
+
+    '['  desplazar e ir al estado 174
+
+
+Estado 91
+
+  141 declVC: IDENTIF '=' $@16 .
+
+    $default  reduce usando la regla 141 (declVC)
+
+
+Estado 92
+
+  130 declVI: IDENTIF '[' expI . ']' '=' expI
+  142 declVC: IDENTIF '[' expI . ']' '=' expC
+  154 declVS: IDENTIF '[' expI . ']' '=' expS
+  166 declVB: IDENTIF '[' expI . ']' '=' expB
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ']'  desplazar e ir al estado 175
+
+
+Estado 93
+
+  178 expI: IDENTIF . '[' NUMBER ']'
+  179     | IDENTIF .
+  185 expS: IDENTIF . '[' NUMBER ']'
+  186     | IDENTIF .
+  208 expB: IDENTIF . '[' NUMBER ']'
+  209     | IDENTIF .
+  211 expC: IDENTIF . '[' NUMBER ']'
+  212     | IDENTIF .
+
+    '['  desplazar e ir al estado 140
+
+    SMALLEREQUALTHAN  reduce usando la regla 179 (expI)
+    SMALLEREQUALTHAN  [reduce usando la regla 186 (expS)]
+    BIGGEREQUALTHAN   reduce usando la regla 179 (expI)
+    BIGGEREQUALTHAN   [reduce usando la regla 186 (expS)]
+    EQUIVALENT        reduce usando la regla 179 (expI)
+    EQUIVALENT        [reduce usando la regla 186 (expS)]
+    EQUIVALENT        [reduce usando la regla 209 (expB)]
+    EQUIVALENT        [reduce usando la regla 212 (expC)]
+    EQUIVALENTNOT     reduce usando la regla 179 (expI)
+    EQUIVALENTNOT     [reduce usando la regla 186 (expS)]
+    EQUIVALENTNOT     [reduce usando la regla 209 (expB)]
+    EQUIVALENTNOT     [reduce usando la regla 212 (expC)]
+    AND               reduce usando la regla 209 (expB)
+    OR                reduce usando la regla 209 (expB)
+    '>'               reduce usando la regla 179 (expI)
+    '>'               [reduce usando la regla 186 (expS)]
+    '<'               reduce usando la regla 179 (expI)
+    '<'               [reduce usando la regla 186 (expS)]
+    '+'               reduce usando la regla 179 (expI)
+    '+'               [reduce usando la regla 186 (expS)]
+    '*'               reduce usando la regla 179 (expI)
+    '*'               [reduce usando la regla 186 (expS)]
+    ')'               reduce usando la regla 179 (expI)
+    ')'               [reduce usando la regla 186 (expS)]
+    ')'               [reduce usando la regla 209 (expB)]
+    ';'               reduce usando la regla 179 (expI)
+    ';'               [reduce usando la regla 186 (expS)]
+    ';'               [reduce usando la regla 209 (expB)]
+    ';'               [reduce usando la regla 212 (expC)]
+    ','               reduce usando la regla 186 (expS)
+    ','               [reduce usando la regla 209 (expB)]
+    ']'               reduce usando la regla 186 (expS)
+    ']'               [reduce usando la regla 209 (expB)]
+    $default          reduce usando la regla 179 (expI)
+
+
+Estado 94
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  181 expS: expI . '*' expS
+  190 expB: expI . EQUIVALENT expI
+  194     | expI . EQUIVALENTNOT expI
+  197     | expI . BIGGEREQUALTHAN expI
+  199     | expI . SMALLEREQUALTHAN expI
+  202     | expI . '>' expI
+  204     | expI . '<' expI
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 145
+    BIGGEREQUALTHAN   desplazar e ir al estado 146
+    EQUIVALENT        desplazar e ir al estado 147
+    EQUIVALENTNOT     desplazar e ir al estado 148
+    '>'               desplazar e ir al estado 149
+    '<'               desplazar e ir al estado 150
+    '+'               desplazar e ir al estado 113
+    '-'               desplazar e ir al estado 114
+    '*'               desplazar e ir al estado 151
+    '/'               desplazar e ir al estado 116
+    '^'               desplazar e ir al estado 117
+
+
+Estado 95
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  192 expB: expS . EQUIVALENT expS
+  196     | expS . EQUIVALENTNOT expS
+  198     | expS . BIGGEREQUALTHAN expS
+  200     | expS . SMALLEREQUALTHAN expS
+  201     | expS . '>' expS
+  203     | expS . '<' expS
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 153
+    BIGGEREQUALTHAN   desplazar e ir al estado 154
+    EQUIVALENT        desplazar e ir al estado 155
+    EQUIVALENTNOT     desplazar e ir al estado 156
+    '>'               desplazar e ir al estado 157
+    '<'               desplazar e ir al estado 158
+    '+'               desplazar e ir al estado 159
+    '*'               desplazar e ir al estado 160
+
+
+Estado 96
+
+   72 ifStructure: IFCOND '(' expB . ')' '{' ifBlockEmpty '}'
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ')'            desplazar e ir al estado 176
+
+
+Estado 97
+
+  191 expB: expC . EQUIVALENT expC
+  195     | expC . EQUIVALENTNOT expC
+
+    EQUIVALENT     desplazar e ir al estado 167
+    EQUIVALENTNOT  desplazar e ir al estado 168
+
+
+Estado 98
+
+   87 loopStructure: FOR '(' expI . ';' expB ';' expI ')' '{' loopBlockEmpty '}'
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ';'  desplazar e ir al estado 177
+
+
+Estado 99
+
+   89 loopStructure: WHILELOOP '(' expB . ')' '{' loopBlockEmpty '}'
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ')'            desplazar e ir al estado 178
+
+
+Estado 100
+
+   88 loopStructure: DOLOOP '(' expB . ')' '{' loopBlockEmpty '}' WHILELOOP '(' expB ')' ';'
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ')'            desplazar e ir al estado 179
+
+
+Estado 101
+
+   73 elifStructure: ELIF '(' . expB ')' '{' ifBlockEmpty '}'
+   74              | ELIF '(' . expB ')' '{' ifBlockEmpty '}' elifStructure
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 180
+    expC  ir al estado 97
+
+
+Estado 102
+
+   75 elseStructure: ELSECOND '{' . ifBlockEmpty '}'
+
+    '}'       reduce usando la regla 76 (ifBlockEmpty)
+    $default  reduce usando la regla 77 ($@8)
+
+    ifBlockEmpty  ir al estado 181
+    $@8           ir al estado 182
+
+
+Estado 103
+
+   70 conditionalStructure: ifStructure elifStructure elseStructure .
+
+    $default  reduce usando la regla 70 (conditionalStructure)
+
+
+Estado 104
+
+   22 functionStructure: VOID IDENTIF $@5 '(' . functionParameter ')' '{' functionBlockEmpty '}'
+
+    ')'       reduce usando la regla 27 (functionParameter)
+    $default  reduce usando la regla 25 ($@6)
+
+    functionParameter  ir al estado 183
+    $@6                ir al estado 184
+
+
+Estado 105
+
+   24 functionCallStructure: IDENTIF . '(' functionCallParameter ')'
+  178 expI: IDENTIF . '[' NUMBER ']'
+  179     | IDENTIF .
+
+    '('  desplazar e ir al estado 35
+    '['  desplazar e ir al estado 109
+
+    $default  reduce usando la regla 179 (expI)
+
+
+Estado 106
+
+  114 dexp: INT IDENTIF '=' functionCallStructure .
+
+    $default  reduce usando la regla 114 (dexp)
+
+
+Estado 107
+
+  110 dexp: INT IDENTIF '=' expI .
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 110 (dexp)
+
+
+Estado 108
+
+   14 functionStructure: INT IDENTIF $@1 '(' . functionParameter ')' '{' functionBlockEmpty '}'
+
+    ')'       reduce usando la regla 27 (functionParameter)
+    $default  reduce usando la regla 25 ($@6)
+
+    functionParameter  ir al estado 185
+    $@6                ir al estado 184
+
+
+Estado 109
+
+  178 expI: IDENTIF '[' . NUMBER ']'
+
+    NUMBER  desplazar e ir al estado 186
+
+
+Estado 110
+
+  177 expI: '-' NUMBER .
+
+    $default  reduce usando la regla 177 (expI)
+
+
+Estado 111
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  175     | '(' expI . ')'
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ')'  desplazar e ir al estado 187
+
+
+Estado 112
+
+  123 declVI: INT '[' ']' IDENTIF . '=' $@10 '[' viContent ']'
+  124       | INT '[' ']' IDENTIF .
+
+    '='  desplazar e ir al estado 188
+
+    $default  reduce usando la regla 124 (declVI)
+
+
+Estado 113
+
+  170 expI: expI '+' . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 189
+
+
+Estado 114
+
+  171 expI: expI '-' . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 190
+
+
+Estado 115
+
+  172 expI: expI '*' . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 191
+
+
+Estado 116
+
+  173 expI: expI '/' . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 192
+
+
+Estado 117
+
+  174 expI: expI '^' . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 193
+
+
+Estado 118
+
+  126 declVI: INT '[' expI ']' . IDENTIF '=' $@11 '[' viContent ']'
+  127       | INT '[' expI ']' . IDENTIF
+
+    IDENTIF  desplazar e ir al estado 194
+
+
+Estado 119
+
+   24 functionCallStructure: IDENTIF . '(' functionCallParameter ')'
+  211 expC: IDENTIF . '[' NUMBER ']'
+  212     | IDENTIF .
+
+    '('  desplazar e ir al estado 35
+    '['  desplazar e ir al estado 195
+
+    $default  reduce usando la regla 212 (expC)
+
+
+Estado 120
+
+  116 dexp: CHAR IDENTIF '=' functionCallStructure .
+
+    $default  reduce usando la regla 116 (dexp)
+
+
+Estado 121
+
+  112 dexp: CHAR IDENTIF '=' expC .
+
+    $default  reduce usando la regla 112 (dexp)
+
+
+Estado 122
+
+   16 functionStructure: CHAR IDENTIF $@2 '(' . functionParameter ')' '{' functionBlockEmpty '}'
+
+    ')'       reduce usando la regla 27 (functionParameter)
+    $default  reduce usando la regla 25 ($@6)
+
+    functionParameter  ir al estado 196
+    $@6                ir al estado 184
+
+
+Estado 123
+
+  135 declVC: CHAR '[' ']' IDENTIF . '=' $@14 '[' vcContent ']'
+  136       | CHAR '[' ']' IDENTIF .
+
+    '='  desplazar e ir al estado 197
+
+    $default  reduce usando la regla 136 (declVC)
+
+
+Estado 124
+
+  138 declVC: CHAR '[' expI ']' . IDENTIF '=' $@15 '[' vcContent ']'
+  139       | CHAR '[' expI ']' . IDENTIF
+
+    IDENTIF  desplazar e ir al estado 198
+
+
+Estado 125
+
+   24 functionCallStructure: IDENTIF . '(' functionCallParameter ')'
+  178 expI: IDENTIF . '[' NUMBER ']'
+  179     | IDENTIF .
+  185 expS: IDENTIF . '[' NUMBER ']'
+  186     | IDENTIF .
+  208 expB: IDENTIF . '[' NUMBER ']'
+  209     | IDENTIF .
+  211 expC: IDENTIF . '[' NUMBER ']'
+  212     | IDENTIF .
+
+    '('  desplazar e ir al estado 35
+    '['  desplazar e ir al estado 140
+
+    SMALLEREQUALTHAN  reduce usando la regla 179 (expI)
+    SMALLEREQUALTHAN  [reduce usando la regla 186 (expS)]
+    BIGGEREQUALTHAN   reduce usando la regla 179 (expI)
+    BIGGEREQUALTHAN   [reduce usando la regla 186 (expS)]
+    EQUIVALENT        reduce usando la regla 179 (expI)
+    EQUIVALENT        [reduce usando la regla 186 (expS)]
+    EQUIVALENT        [reduce usando la regla 209 (expB)]
+    EQUIVALENT        [reduce usando la regla 212 (expC)]
+    EQUIVALENTNOT     reduce usando la regla 179 (expI)
+    EQUIVALENTNOT     [reduce usando la regla 186 (expS)]
+    EQUIVALENTNOT     [reduce usando la regla 209 (expB)]
+    EQUIVALENTNOT     [reduce usando la regla 212 (expC)]
+    AND               reduce usando la regla 209 (expB)
+    OR                reduce usando la regla 209 (expB)
+    '>'               reduce usando la regla 179 (expI)
+    '>'               [reduce usando la regla 186 (expS)]
+    '<'               reduce usando la regla 179 (expI)
+    '<'               [reduce usando la regla 186 (expS)]
+    '+'               reduce usando la regla 179 (expI)
+    '+'               [reduce usando la regla 186 (expS)]
+    '*'               reduce usando la regla 179 (expI)
+    '*'               [reduce usando la regla 186 (expS)]
+    ';'               reduce usando la regla 209 (expB)
+    $default          reduce usando la regla 179 (expI)
+
+
+Estado 126
+
+  115 dexp: BOOL IDENTIF '=' functionCallStructure .
+
+    $default  reduce usando la regla 115 (dexp)
+
+
+Estado 127
+
+  111 dexp: BOOL IDENTIF '=' expB .
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+
+    $default  reduce usando la regla 111 (dexp)
+
+
+Estado 128
+
+   18 functionStructure: BOOL IDENTIF $@3 '(' . functionParameter ')' '{' functionBlockEmpty '}'
+
+    ')'       reduce usando la regla 27 (functionParameter)
+    $default  reduce usando la regla 25 ($@6)
+
+    functionParameter  ir al estado 199
+    $@6                ir al estado 184
+
+
+Estado 129
+
+  159 declVB: BOOL '[' ']' IDENTIF . '=' $@22 '[' vbContent ']'
+  160       | BOOL '[' ']' IDENTIF .
+
+    '='  desplazar e ir al estado 200
+
+    $default  reduce usando la regla 160 (declVB)
+
+
+Estado 130
+
+  162 declVB: BOOL '[' expI ']' . IDENTIF '=' $@23 '[' vbContent ']'
+  163       | BOOL '[' expI ']' . IDENTIF
+
+    IDENTIF  desplazar e ir al estado 201
+
+
+Estado 131
+
+   24 functionCallStructure: IDENTIF . '(' functionCallParameter ')'
+  178 expI: IDENTIF . '[' NUMBER ']'
+  179     | IDENTIF .
+  185 expS: IDENTIF . '[' NUMBER ']'
+  186     | IDENTIF .
+
+    '('  desplazar e ir al estado 35
+    '['  desplazar e ir al estado 202
+
+    '+'       reduce usando la regla 179 (expI)
+    '+'       [reduce usando la regla 186 (expS)]
+    '*'       reduce usando la regla 179 (expI)
+    '*'       [reduce usando la regla 186 (expS)]
+    ';'       reduce usando la regla 186 (expS)
+    $default  reduce usando la regla 179 (expI)
+
+
+Estado 132
+
+  175 expI: '(' . expI ')'
+  183 expS: '(' . expS ')'
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 204
+    expS  ir al estado 205
+
+
+Estado 133
+
+  117 dexp: STRING IDENTIF '=' functionCallStructure .
+
+    $default  reduce usando la regla 117 (dexp)
+
+
+Estado 134
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  181 expS: expI . '*' expS
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 151
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+
+Estado 135
+
+  113 dexp: STRING IDENTIF '=' expS .
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+
+    $default  reduce usando la regla 113 (dexp)
+
+
+Estado 136
+
+   20 functionStructure: STRING IDENTIF $@4 '(' . functionParameter ')' '{' functionBlockEmpty '}'
+
+    ')'       reduce usando la regla 27 (functionParameter)
+    $default  reduce usando la regla 25 ($@6)
+
+    functionParameter  ir al estado 206
+    $@6                ir al estado 184
+
+
+Estado 137
+
+  147 declVS: STRING '[' ']' IDENTIF . '=' $@18 '[' vsContent ']'
+  148       | STRING '[' ']' IDENTIF .
+
+    '='  desplazar e ir al estado 207
+
+    $default  reduce usando la regla 148 (declVS)
+
+
+Estado 138
+
+  150 declVS: STRING '[' expI ']' . IDENTIF '=' $@19 '[' vsContent ']'
+  151       | STRING '[' expI ']' . IDENTIF
+
+    IDENTIF  desplazar e ir al estado 208
+
+
+Estado 139
+
+   38 functionCallParameter: IDENTIF ',' . functionCallParameter
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 79
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    $default  reduce usando la regla 37 (functionCallParameter)
+
+    functionCallParameter  ir al estado 209
+    expI                   ir al estado 85
+    expS                   ir al estado 86
+    expB                   ir al estado 87
+    expC                   ir al estado 88
+
+
+Estado 140
+
+  178 expI: IDENTIF '[' . NUMBER ']'
+  185 expS: IDENTIF '[' . NUMBER ']'
+  208 expB: IDENTIF '[' . NUMBER ']'
+  211 expC: IDENTIF '[' . NUMBER ']'
+
+    NUMBER  desplazar e ir al estado 210
+
+
+Estado 141
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  175     | '(' expI . ')'
+  181 expS: expI . '*' expS
+  190 expB: expI . EQUIVALENT expI
+  194     | expI . EQUIVALENTNOT expI
+  197     | expI . BIGGEREQUALTHAN expI
+  199     | expI . SMALLEREQUALTHAN expI
+  202     | expI . '>' expI
+  204     | expI . '<' expI
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 145
+    BIGGEREQUALTHAN   desplazar e ir al estado 146
+    EQUIVALENT        desplazar e ir al estado 147
+    EQUIVALENTNOT     desplazar e ir al estado 148
+    '>'               desplazar e ir al estado 149
+    '<'               desplazar e ir al estado 150
+    '+'               desplazar e ir al estado 113
+    '-'               desplazar e ir al estado 114
+    '*'               desplazar e ir al estado 151
+    '/'               desplazar e ir al estado 116
+    '^'               desplazar e ir al estado 117
+    ')'               desplazar e ir al estado 187
+
+
+Estado 142
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  183     | '(' expS . ')'
+  192 expB: expS . EQUIVALENT expS
+  196     | expS . EQUIVALENTNOT expS
+  198     | expS . BIGGEREQUALTHAN expS
+  200     | expS . SMALLEREQUALTHAN expS
+  201     | expS . '>' expS
+  203     | expS . '<' expS
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 153
+    BIGGEREQUALTHAN   desplazar e ir al estado 154
+    EQUIVALENT        desplazar e ir al estado 155
+    EQUIVALENTNOT     desplazar e ir al estado 156
+    '>'               desplazar e ir al estado 157
+    '<'               desplazar e ir al estado 158
+    '+'               desplazar e ir al estado 159
+    '*'               desplazar e ir al estado 160
+    ')'               desplazar e ir al estado 211
+
+
+Estado 143
+
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+  205     | '(' expB . ')'
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ')'            desplazar e ir al estado 212
+
+
+Estado 144
+
+   24 functionCallStructure: IDENTIF '(' functionCallParameter ')' .
+
+    $default  reduce usando la regla 24 (functionCallStructure)
+
+
+Estado 145
+
+  199 expB: expI SMALLEREQUALTHAN . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 213
+
+
+Estado 146
+
+  197 expB: expI BIGGEREQUALTHAN . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 214
+
+
+Estado 147
+
+  190 expB: expI EQUIVALENT . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 215
+
+
+Estado 148
+
+  194 expB: expI EQUIVALENTNOT . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 216
+
+
+Estado 149
+
+  202 expB: expI '>' . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 217
+
+
+Estado 150
+
+  204 expB: expI '<' . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 218
+
+
+Estado 151
+
+  172 expI: expI '*' . expI
+  181 expS: expI '*' . expS
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 219
+    expS  ir al estado 220
+
+
+Estado 152
+
+   39 functionCallParameter: expI ',' . functionCallParameter
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 79
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    $default  reduce usando la regla 37 (functionCallParameter)
+
+    functionCallParameter  ir al estado 221
+    expI                   ir al estado 85
+    expS                   ir al estado 86
+    expB                   ir al estado 87
+    expC                   ir al estado 88
+
+
+Estado 153
+
+  200 expB: expS SMALLEREQUALTHAN . expS
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 134
+    expS  ir al estado 222
+
+
+Estado 154
+
+  198 expB: expS BIGGEREQUALTHAN . expS
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 134
+    expS  ir al estado 223
+
+
+Estado 155
+
+  192 expB: expS EQUIVALENT . expS
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 134
+    expS  ir al estado 224
+
+
+Estado 156
+
+  196 expB: expS EQUIVALENTNOT . expS
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 134
+    expS  ir al estado 225
+
+
+Estado 157
+
+  201 expB: expS '>' . expS
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 134
+    expS  ir al estado 226
+
+
+Estado 158
+
+  203 expB: expS '<' . expS
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 134
+    expS  ir al estado 227
+
+
+Estado 159
+
+  180 expS: expS '+' . expS
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    expI  ir al estado 134
+    expS  ir al estado 228
+
+
+Estado 160
+
+  182 expS: expS '*' . expI
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 229
+
+
+Estado 161
+
+   42 functionCallParameter: expS ',' . functionCallParameter
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 79
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    $default  reduce usando la regla 37 (functionCallParameter)
+
+    functionCallParameter  ir al estado 230
+    expI                   ir al estado 85
+    expS                   ir al estado 86
+    expB                   ir al estado 87
+    expC                   ir al estado 88
+
+
+Estado 162
+
+  189 expB: expB EQUIVALENT . expB
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 231
+    expC  ir al estado 97
+
+
+Estado 163
+
+  193 expB: expB EQUIVALENTNOT . expB
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 232
+    expC  ir al estado 97
+
+
+Estado 164
+
+  187 expB: expB AND . expB
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 233
+    expC  ir al estado 97
+
+
+Estado 165
+
+  188 expB: expB OR . expB
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 234
+    expC  ir al estado 97
+
+
+Estado 166
+
+   40 functionCallParameter: expB ',' . functionCallParameter
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 79
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    $default  reduce usando la regla 37 (functionCallParameter)
+
+    functionCallParameter  ir al estado 235
+    expI                   ir al estado 85
+    expS                   ir al estado 86
+    expB                   ir al estado 87
+    expC                   ir al estado 88
+
+
+Estado 167
+
+  191 expB: expC EQUIVALENT . expC
+
+    CHARACTER  desplazar e ir al estado 78
+    IDENTIF    desplazar e ir al estado 236
+
+    expC  ir al estado 237
+
+
+Estado 168
+
+  195 expB: expC EQUIVALENTNOT . expC
+
+    CHARACTER  desplazar e ir al estado 78
+    IDENTIF    desplazar e ir al estado 236
+
+    expC  ir al estado 238
+
+
+Estado 169
+
+   41 functionCallParameter: expC ',' . functionCallParameter
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 79
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    $default  reduce usando la regla 37 (functionCallParameter)
+
+    functionCallParameter  ir al estado 239
+    expI                   ir al estado 85
+    expS                   ir al estado 86
+    expB                   ir al estado 87
+    expC                   ir al estado 88
+
+
+Estado 170
+
+  153 declVS: IDENTIF '=' '[' vsContent . ']' $@20
+
+    ']'  desplazar e ir al estado 240
+
+
+Estado 171
+
+  165 declVB: IDENTIF '=' '[' vbContent . ']' $@24
+
+    ']'  desplazar e ir al estado 241
+
+
+Estado 172
+
+  155 vsContent: expS .
+  157          | expS . $@21 ',' vsContent
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  192 expB: expS . EQUIVALENT expS
+  196     | expS . EQUIVALENTNOT expS
+  198     | expS . BIGGEREQUALTHAN expS
+  200     | expS . SMALLEREQUALTHAN expS
+  201     | expS . '>' expS
+  203     | expS . '<' expS
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 153
+    BIGGEREQUALTHAN   desplazar e ir al estado 154
+    EQUIVALENT        desplazar e ir al estado 155
+    EQUIVALENTNOT     desplazar e ir al estado 156
+    '>'               desplazar e ir al estado 157
+    '<'               desplazar e ir al estado 158
+    '+'               desplazar e ir al estado 159
+    '*'               desplazar e ir al estado 160
+
+    ','       reduce usando la regla 156 ($@21)
+    $default  reduce usando la regla 155 (vsContent)
+
+    $@21  ir al estado 242
+
+
+Estado 173
+
+  167 vbContent: expB .
+  169          | expB . $@25 ',' vbContent
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+
+    ','       reduce usando la regla 168 ($@25)
+    $default  reduce usando la regla 167 (vbContent)
+
+    $@25  ir al estado 243
+
+
+Estado 174
+
+  129 declVI: IDENTIF '=' $@12 '[' . viContent ']'
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    viContent  ir al estado 244
+    expI       ir al estado 245
+
+
+Estado 175
+
+  130 declVI: IDENTIF '[' expI ']' . '=' expI
+  142 declVC: IDENTIF '[' expI ']' . '=' expC
+  154 declVS: IDENTIF '[' expI ']' . '=' expS
+  166 declVB: IDENTIF '[' expI ']' . '=' expB
+
+    '='  desplazar e ir al estado 246
+
+
+Estado 176
+
+   72 ifStructure: IFCOND '(' expB ')' . '{' ifBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 247
+
+
+Estado 177
+
+   87 loopStructure: FOR '(' expI ';' . expB ';' expI ')' '{' loopBlockEmpty '}'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 248
+    expC  ir al estado 97
+
+
+Estado 178
+
+   89 loopStructure: WHILELOOP '(' expB ')' . '{' loopBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 249
+
+
+Estado 179
+
+   88 loopStructure: DOLOOP '(' expB ')' . '{' loopBlockEmpty '}' WHILELOOP '(' expB ')' ';'
+
+    '{'  desplazar e ir al estado 250
+
+
+Estado 180
+
+   73 elifStructure: ELIF '(' expB . ')' '{' ifBlockEmpty '}'
+   74              | ELIF '(' expB . ')' '{' ifBlockEmpty '}' elifStructure
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ')'            desplazar e ir al estado 251
+
+
+Estado 181
+
+   75 elseStructure: ELSECOND '{' ifBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 252
+
+
+Estado 182
+
+   78 ifBlockEmpty: $@8 . ifBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+    BREAK      desplazar e ir al estado 253
+    CONTINUE   desplazar e ir al estado 254
+
+    functionStructure      ir al estado 255
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 256
+    ifStructure            ir al estado 17
+    ifBlock                ir al estado 257
+    loopStructure          ir al estado 258
+    loopBlock              ir al estado 259
+    instr                  ir al estado 260
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 183
+
+   22 functionStructure: VOID IDENTIF $@5 '(' functionParameter . ')' '{' functionBlockEmpty '}'
+
+    ')'  desplazar e ir al estado 261
+
+
+Estado 184
+
+   26 functionParameter: $@6 . Parameter
+
+    INT     desplazar e ir al estado 262
+    CHAR    desplazar e ir al estado 263
+    BOOL    desplazar e ir al estado 264
+    STRING  desplazar e ir al estado 265
+
+    Parameter  ir al estado 266
+
+
+Estado 185
+
+   14 functionStructure: INT IDENTIF $@1 '(' functionParameter . ')' '{' functionBlockEmpty '}'
+
+    ')'  desplazar e ir al estado 267
+
+
+Estado 186
+
+  178 expI: IDENTIF '[' NUMBER . ']'
+
+    ']'  desplazar e ir al estado 268
+
+
+Estado 187
+
+  175 expI: '(' expI ')' .
+
+    $default  reduce usando la regla 175 (expI)
+
+
+Estado 188
+
+  123 declVI: INT '[' ']' IDENTIF '=' . $@10 '[' viContent ']'
+
+    $default  reduce usando la regla 122 ($@10)
+
+    $@10  ir al estado 269
+
+
+Estado 189
+
+  170 expI: expI . '+' expI
+  170     | expI '+' expI .
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 170 (expI)
+
+
+Estado 190
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  171     | expI '-' expI .
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 171 (expI)
+
+
+Estado 191
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  172     | expI '*' expI .
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    $default  reduce usando la regla 172 (expI)
+
+
+Estado 192
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  173     | expI '/' expI .
+  174     | expI . '^' expI
+
+    $default  reduce usando la regla 173 (expI)
+
+
+Estado 193
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  174     | expI '^' expI .
+
+    $default  reduce usando la regla 174 (expI)
+
+
+Estado 194
+
+  126 declVI: INT '[' expI ']' IDENTIF . '=' $@11 '[' viContent ']'
+  127       | INT '[' expI ']' IDENTIF .
+
+    '='  desplazar e ir al estado 270
+
+    $default  reduce usando la regla 127 (declVI)
+
+
+Estado 195
+
+  211 expC: IDENTIF '[' . NUMBER ']'
+
+    NUMBER  desplazar e ir al estado 271
+
+
+Estado 196
+
+   16 functionStructure: CHAR IDENTIF $@2 '(' functionParameter . ')' '{' functionBlockEmpty '}'
+
+    ')'  desplazar e ir al estado 272
+
+
+Estado 197
+
+  135 declVC: CHAR '[' ']' IDENTIF '=' . $@14 '[' vcContent ']'
+
+    $default  reduce usando la regla 134 ($@14)
+
+    $@14  ir al estado 273
+
+
+Estado 198
+
+  138 declVC: CHAR '[' expI ']' IDENTIF . '=' $@15 '[' vcContent ']'
+  139       | CHAR '[' expI ']' IDENTIF .
+
+    '='  desplazar e ir al estado 274
+
+    $default  reduce usando la regla 139 (declVC)
+
+
+Estado 199
+
+   18 functionStructure: BOOL IDENTIF $@3 '(' functionParameter . ')' '{' functionBlockEmpty '}'
+
+    ')'  desplazar e ir al estado 275
+
+
+Estado 200
+
+  159 declVB: BOOL '[' ']' IDENTIF '=' . $@22 '[' vbContent ']'
+
+    $default  reduce usando la regla 158 ($@22)
+
+    $@22  ir al estado 276
+
+
+Estado 201
+
+  162 declVB: BOOL '[' expI ']' IDENTIF . '=' $@23 '[' vbContent ']'
+  163       | BOOL '[' expI ']' IDENTIF .
+
+    '='  desplazar e ir al estado 277
+
+    $default  reduce usando la regla 163 (declVB)
+
+
+Estado 202
+
+  178 expI: IDENTIF '[' . NUMBER ']'
+  185 expS: IDENTIF '[' . NUMBER ']'
+
+    NUMBER  desplazar e ir al estado 278
+
+
+Estado 203
+
+  178 expI: IDENTIF . '[' NUMBER ']'
+  179     | IDENTIF .
+  185 expS: IDENTIF . '[' NUMBER ']'
+  186     | IDENTIF .
+
+    '['  desplazar e ir al estado 202
+
+    SMALLEREQUALTHAN  reduce usando la regla 179 (expI)
+    SMALLEREQUALTHAN  [reduce usando la regla 186 (expS)]
+    BIGGEREQUALTHAN   reduce usando la regla 179 (expI)
+    BIGGEREQUALTHAN   [reduce usando la regla 186 (expS)]
+    EQUIVALENT        reduce usando la regla 179 (expI)
+    EQUIVALENT        [reduce usando la regla 186 (expS)]
+    EQUIVALENTNOT     reduce usando la regla 179 (expI)
+    EQUIVALENTNOT     [reduce usando la regla 186 (expS)]
+    AND               reduce usando la regla 186 (expS)
+    OR                reduce usando la regla 186 (expS)
+    '>'               reduce usando la regla 179 (expI)
+    '>'               [reduce usando la regla 186 (expS)]
+    '<'               reduce usando la regla 179 (expI)
+    '<'               [reduce usando la regla 186 (expS)]
+    '+'               reduce usando la regla 179 (expI)
+    '+'               [reduce usando la regla 186 (expS)]
+    '*'               reduce usando la regla 179 (expI)
+    '*'               [reduce usando la regla 186 (expS)]
+    ')'               reduce usando la regla 179 (expI)
+    ')'               [reduce usando la regla 186 (expS)]
+    ';'               reduce usando la regla 179 (expI)
+    ';'               [reduce usando la regla 186 (expS)]
+    ','               reduce usando la regla 179 (expI)
+    ','               [reduce usando la regla 186 (expS)]
+    ']'               reduce usando la regla 186 (expS)
+    $default          reduce usando la regla 179 (expI)
+
+
+Estado 204
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  175     | '(' expI . ')'
+  181 expS: expI . '*' expS
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 151
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ')'  desplazar e ir al estado 187
+
+
+Estado 205
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  183     | '(' expS . ')'
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+    ')'  desplazar e ir al estado 211
+
+
+Estado 206
+
+   20 functionStructure: STRING IDENTIF $@4 '(' functionParameter . ')' '{' functionBlockEmpty '}'
+
+    ')'  desplazar e ir al estado 279
+
+
+Estado 207
+
+  147 declVS: STRING '[' ']' IDENTIF '=' . $@18 '[' vsContent ']'
+
+    $default  reduce usando la regla 146 ($@18)
+
+    $@18  ir al estado 280
+
+
+Estado 208
+
+  150 declVS: STRING '[' expI ']' IDENTIF . '=' $@19 '[' vsContent ']'
+  151       | STRING '[' expI ']' IDENTIF .
+
+    '='  desplazar e ir al estado 281
+
+    $default  reduce usando la regla 151 (declVS)
+
+
+Estado 209
+
+   38 functionCallParameter: IDENTIF ',' functionCallParameter .
+
+    $default  reduce usando la regla 38 (functionCallParameter)
+
+
+Estado 210
+
+  178 expI: IDENTIF '[' NUMBER . ']'
+  185 expS: IDENTIF '[' NUMBER . ']'
+  208 expB: IDENTIF '[' NUMBER . ']'
+  211 expC: IDENTIF '[' NUMBER . ']'
+
+    ']'  desplazar e ir al estado 282
+
+
+Estado 211
+
+  183 expS: '(' expS ')' .
+
+    $default  reduce usando la regla 183 (expS)
+
+
+Estado 212
+
+  205 expB: '(' expB ')' .
+
+    $default  reduce usando la regla 205 (expB)
+
+
+Estado 213
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  199 expB: expI SMALLEREQUALTHAN expI .
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 199 (expB)
+
+
+Estado 214
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  197 expB: expI BIGGEREQUALTHAN expI .
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 197 (expB)
+
+
+Estado 215
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  190 expB: expI EQUIVALENT expI .
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 190 (expB)
+
+
+Estado 216
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  194 expB: expI EQUIVALENTNOT expI .
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 194 (expB)
+
+
+Estado 217
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  202 expB: expI '>' expI .
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 202 (expB)
+
+
+Estado 218
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  204 expB: expI '<' expI .
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 204 (expB)
+
+
+Estado 219
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  172     | expI '*' expI .
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  181 expS: expI . '*' expS
+
+    $default  reduce usando la regla 172 (expI)
+
+
+Estado 220
+
+  180 expS: expS . '+' expS
+  181     | expI '*' expS .
+  182     | expS . '*' expI
+
+    $default  reduce usando la regla 181 (expS)
+
+
+Estado 221
+
+   39 functionCallParameter: expI ',' functionCallParameter .
+
+    $default  reduce usando la regla 39 (functionCallParameter)
+
+
+Estado 222
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  200 expB: expS SMALLEREQUALTHAN expS .
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+
+    $default  reduce usando la regla 200 (expB)
+
+
+Estado 223
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  198 expB: expS BIGGEREQUALTHAN expS .
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+
+    $default  reduce usando la regla 198 (expB)
+
+
+Estado 224
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  192 expB: expS EQUIVALENT expS .
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+
+    $default  reduce usando la regla 192 (expB)
+
+
+Estado 225
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  196 expB: expS EQUIVALENTNOT expS .
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+
+    $default  reduce usando la regla 196 (expB)
+
+
+Estado 226
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  201 expB: expS '>' expS .
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+
+    $default  reduce usando la regla 201 (expB)
+
+
+Estado 227
+
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  203 expB: expS '<' expS .
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+
+    $default  reduce usando la regla 203 (expB)
+
+
+Estado 228
+
+  180 expS: expS . '+' expS
+  180     | expS '+' expS .
+  182     | expS . '*' expI
+
+    '*'  desplazar e ir al estado 160
+
+    $default  reduce usando la regla 180 (expS)
+
+
+Estado 229
+
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  182 expS: expS '*' expI .
+
+    '-'  desplazar e ir al estado 114
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    $default  reduce usando la regla 182 (expS)
+
+
+Estado 230
+
+   42 functionCallParameter: expS ',' functionCallParameter .
+
+    $default  reduce usando la regla 42 (functionCallParameter)
+
+
+Estado 231
+
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  189     | expB EQUIVALENT expB .
+  193     | expB . EQUIVALENTNOT expB
+
+    $default  reduce usando la regla 189 (expB)
+
+
+Estado 232
+
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+  193     | expB EQUIVALENTNOT expB .
+
+    $default  reduce usando la regla 193 (expB)
+
+
+Estado 233
+
+  187 expB: expB . AND expB
+  187     | expB AND expB .
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    $default  reduce usando la regla 187 (expB)
+
+
+Estado 234
+
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  188     | expB OR expB .
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    $default  reduce usando la regla 188 (expB)
+
+
+Estado 235
+
+   40 functionCallParameter: expB ',' functionCallParameter .
+
+    $default  reduce usando la regla 40 (functionCallParameter)
+
+
+Estado 236
+
+  211 expC: IDENTIF . '[' NUMBER ']'
+  212     | IDENTIF .
+
+    '['  desplazar e ir al estado 195
+
+    $default  reduce usando la regla 212 (expC)
+
+
+Estado 237
+
+  191 expB: expC EQUIVALENT expC .
+
+    $default  reduce usando la regla 191 (expB)
+
+
+Estado 238
+
+  195 expB: expC EQUIVALENTNOT expC .
+
+    $default  reduce usando la regla 195 (expB)
+
+
+Estado 239
+
+   41 functionCallParameter: expC ',' functionCallParameter .
+
+    $default  reduce usando la regla 41 (functionCallParameter)
+
+
+Estado 240
+
+  153 declVS: IDENTIF '=' '[' vsContent ']' . $@20
+
+    $default  reduce usando la regla 152 ($@20)
+
+    $@20  ir al estado 283
+
+
+Estado 241
+
+  165 declVB: IDENTIF '=' '[' vbContent ']' . $@24
+
+    $default  reduce usando la regla 164 ($@24)
+
+    $@24  ir al estado 284
+
+
+Estado 242
+
+  157 vsContent: expS $@21 . ',' vsContent
+
+    ','  desplazar e ir al estado 285
+
+
+Estado 243
+
+  169 vbContent: expB $@25 . ',' vbContent
+
+    ','  desplazar e ir al estado 286
+
+
+Estado 244
+
+  129 declVI: IDENTIF '=' $@12 '[' viContent . ']'
+
+    ']'  desplazar e ir al estado 287
+
+
+Estado 245
+
+  131 viContent: expI .
+  133          | expI . $@13 ',' viContent
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+
+    ','       reduce usando la regla 132 ($@13)
+    $default  reduce usando la regla 131 (viContent)
+
+    $@13  ir al estado 288
+
+
+Estado 246
+
+  130 declVI: IDENTIF '[' expI ']' '=' . expI
+  142 declVC: IDENTIF '[' expI ']' '=' . expC
+  154 declVS: IDENTIF '[' expI ']' '=' . expS
+  166 declVB: IDENTIF '[' expI ']' '=' . expB
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 289
+    expS  ir al estado 290
+    expB  ir al estado 291
+    expC  ir al estado 292
+
+
+Estado 247
+
+   72 ifStructure: IFCOND '(' expB ')' '{' . ifBlockEmpty '}'
+
+    '}'       reduce usando la regla 76 (ifBlockEmpty)
+    $default  reduce usando la regla 77 ($@8)
+
+    ifBlockEmpty  ir al estado 293
+    $@8           ir al estado 182
+
+
+Estado 248
+
+   87 loopStructure: FOR '(' expI ';' expB . ';' expI ')' '{' loopBlockEmpty '}'
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ';'            desplazar e ir al estado 294
+
+
+Estado 249
+
+   89 loopStructure: WHILELOOP '(' expB ')' '{' . loopBlockEmpty '}'
+
+    '}'       reduce usando la regla 90 (loopBlockEmpty)
+    $default  reduce usando la regla 91 ($@9)
+
+    loopBlockEmpty  ir al estado 295
+    $@9             ir al estado 296
+
+
+Estado 250
+
+   88 loopStructure: DOLOOP '(' expB ')' '{' . loopBlockEmpty '}' WHILELOOP '(' expB ')' ';'
+
+    '}'       reduce usando la regla 90 (loopBlockEmpty)
+    $default  reduce usando la regla 91 ($@9)
+
+    loopBlockEmpty  ir al estado 297
+    $@9             ir al estado 296
+
+
+Estado 251
+
+   73 elifStructure: ELIF '(' expB ')' . '{' ifBlockEmpty '}'
+   74              | ELIF '(' expB ')' . '{' ifBlockEmpty '}' elifStructure
+
+    '{'  desplazar e ir al estado 298
+
+
+Estado 252
+
+   75 elseStructure: ELSECOND '{' ifBlockEmpty '}' .
+
+    $default  reduce usando la regla 75 (elseStructure)
+
+
+Estado 253
+
+   97 loopBlock: BREAK . ';'
+
+    ';'  desplazar e ir al estado 299
+
+
+Estado 254
+
+   98 loopBlock: CONTINUE . ';'
+
+    ';'  desplazar e ir al estado 300
+
+
+Estado 255
+
+   81 ifBlock: functionStructure .
+   95 loopBlock: functionStructure .
+
+    '}'       reduce usando la regla 81 (ifBlock)
+    $default  reduce usando la regla 95 (loopBlock)
+
+
+Estado 256
+
+   80 ifBlock: conditionalStructure .
+   94 loopBlock: conditionalStructure .
+
+    '}'       reduce usando la regla 80 (ifBlock)
+    $default  reduce usando la regla 94 (loopBlock)
+
+
+Estado 257
+
+   78 ifBlockEmpty: $@8 ifBlock .
+
+    $default  reduce usando la regla 78 (ifBlockEmpty)
+
+
+Estado 258
+
+   79 ifBlock: loopStructure .
+   93 loopBlock: loopStructure .
+
+    '}'       reduce usando la regla 79 (ifBlock)
+    $default  reduce usando la regla 93 (loopBlock)
+
+
+Estado 259
+
+   83 ifBlock: loopBlock . instr
+   84        | loopBlock . loopStructure
+   85        | loopBlock . conditionalStructure
+   86        | loopBlock . functionStructure
+   99 loopBlock: loopBlock . BREAK ';'
+  100          | loopBlock . CONTINUE ';'
+  101          | loopBlock . instr
+  102          | loopBlock . loopStructure
+  103          | loopBlock . conditionalStructure
+  104          | loopBlock . functionStructure
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+    BREAK      desplazar e ir al estado 301
+    CONTINUE   desplazar e ir al estado 302
+
+    functionStructure      ir al estado 303
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 304
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 305
+    instr                  ir al estado 306
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 260
+
+   82 ifBlock: instr .
+   96 loopBlock: instr .
+
+    '}'       reduce usando la regla 82 (ifBlock)
+    $default  reduce usando la regla 96 (loopBlock)
+
+
+Estado 261
+
+   22 functionStructure: VOID IDENTIF $@5 '(' functionParameter ')' . '{' functionBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 307
+
+
+Estado 262
+
+   28 Parameter: INT . IDENTIF
+   32          | INT . IDENTIF ',' Parameter
+
+    IDENTIF  desplazar e ir al estado 308
+
+
+Estado 263
+
+   29 Parameter: CHAR . IDENTIF
+   33          | CHAR . IDENTIF ',' Parameter
+
+    IDENTIF  desplazar e ir al estado 309
+
+
+Estado 264
+
+   31 Parameter: BOOL . IDENTIF
+   35          | BOOL . IDENTIF ',' Parameter
+
+    IDENTIF  desplazar e ir al estado 310
+
+
+Estado 265
+
+   30 Parameter: STRING . IDENTIF
+   34          | STRING . IDENTIF ',' Parameter
+
+    IDENTIF  desplazar e ir al estado 311
+
+
+Estado 266
+
+   26 functionParameter: $@6 Parameter .
+
+    $default  reduce usando la regla 26 (functionParameter)
+
+
+Estado 267
+
+   14 functionStructure: INT IDENTIF $@1 '(' functionParameter ')' . '{' functionBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 312
+
+
+Estado 268
+
+  178 expI: IDENTIF '[' NUMBER ']' .
+
+    $default  reduce usando la regla 178 (expI)
+
+
+Estado 269
+
+  123 declVI: INT '[' ']' IDENTIF '=' $@10 . '[' viContent ']'
+
+    '['  desplazar e ir al estado 313
+
+
+Estado 270
+
+  126 declVI: INT '[' expI ']' IDENTIF '=' . $@11 '[' viContent ']'
+
+    $default  reduce usando la regla 125 ($@11)
+
+    $@11  ir al estado 314
+
+
+Estado 271
+
+  211 expC: IDENTIF '[' NUMBER . ']'
+
+    ']'  desplazar e ir al estado 315
+
+
+Estado 272
+
+   16 functionStructure: CHAR IDENTIF $@2 '(' functionParameter ')' . '{' functionBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 316
+
+
+Estado 273
+
+  135 declVC: CHAR '[' ']' IDENTIF '=' $@14 . '[' vcContent ']'
+
+    '['  desplazar e ir al estado 317
+
+
+Estado 274
+
+  138 declVC: CHAR '[' expI ']' IDENTIF '=' . $@15 '[' vcContent ']'
+
+    $default  reduce usando la regla 137 ($@15)
+
+    $@15  ir al estado 318
+
+
+Estado 275
+
+   18 functionStructure: BOOL IDENTIF $@3 '(' functionParameter ')' . '{' functionBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 319
+
+
+Estado 276
+
+  159 declVB: BOOL '[' ']' IDENTIF '=' $@22 . '[' vbContent ']'
+
+    '['  desplazar e ir al estado 320
+
+
+Estado 277
+
+  162 declVB: BOOL '[' expI ']' IDENTIF '=' . $@23 '[' vbContent ']'
+
+    $default  reduce usando la regla 161 ($@23)
+
+    $@23  ir al estado 321
+
+
+Estado 278
+
+  178 expI: IDENTIF '[' NUMBER . ']'
+  185 expS: IDENTIF '[' NUMBER . ']'
+
+    ']'  desplazar e ir al estado 322
+
+
+Estado 279
+
+   20 functionStructure: STRING IDENTIF $@4 '(' functionParameter ')' . '{' functionBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 323
+
+
+Estado 280
+
+  147 declVS: STRING '[' ']' IDENTIF '=' $@18 . '[' vsContent ']'
+
+    '['  desplazar e ir al estado 324
+
+
+Estado 281
+
+  150 declVS: STRING '[' expI ']' IDENTIF '=' . $@19 '[' vsContent ']'
+
+    $default  reduce usando la regla 149 ($@19)
+
+    $@19  ir al estado 325
+
+
+Estado 282
+
+  178 expI: IDENTIF '[' NUMBER ']' .
+  185 expS: IDENTIF '[' NUMBER ']' .
+  208 expB: IDENTIF '[' NUMBER ']' .
+  211 expC: IDENTIF '[' NUMBER ']' .
+
+    SMALLEREQUALTHAN  reduce usando la regla 178 (expI)
+    SMALLEREQUALTHAN  [reduce usando la regla 185 (expS)]
+    BIGGEREQUALTHAN   reduce usando la regla 178 (expI)
+    BIGGEREQUALTHAN   [reduce usando la regla 185 (expS)]
+    EQUIVALENT        reduce usando la regla 178 (expI)
+    EQUIVALENT        [reduce usando la regla 185 (expS)]
+    EQUIVALENT        [reduce usando la regla 208 (expB)]
+    EQUIVALENT        [reduce usando la regla 211 (expC)]
+    EQUIVALENTNOT     reduce usando la regla 178 (expI)
+    EQUIVALENTNOT     [reduce usando la regla 185 (expS)]
+    EQUIVALENTNOT     [reduce usando la regla 208 (expB)]
+    EQUIVALENTNOT     [reduce usando la regla 211 (expC)]
+    AND               reduce usando la regla 208 (expB)
+    OR                reduce usando la regla 208 (expB)
+    '>'               reduce usando la regla 178 (expI)
+    '>'               [reduce usando la regla 185 (expS)]
+    '<'               reduce usando la regla 178 (expI)
+    '<'               [reduce usando la regla 185 (expS)]
+    '+'               reduce usando la regla 178 (expI)
+    '+'               [reduce usando la regla 185 (expS)]
+    '*'               reduce usando la regla 178 (expI)
+    '*'               [reduce usando la regla 185 (expS)]
+    ')'               reduce usando la regla 178 (expI)
+    ')'               [reduce usando la regla 185 (expS)]
+    ')'               [reduce usando la regla 208 (expB)]
+    ')'               [reduce usando la regla 211 (expC)]
+    ';'               reduce usando la regla 178 (expI)
+    ';'               [reduce usando la regla 185 (expS)]
+    ';'               [reduce usando la regla 208 (expB)]
+    ';'               [reduce usando la regla 211 (expC)]
+    ','               reduce usando la regla 178 (expI)
+    ','               [reduce usando la regla 185 (expS)]
+    ','               [reduce usando la regla 208 (expB)]
+    ','               [reduce usando la regla 211 (expC)]
+    ']'               reduce usando la regla 185 (expS)
+    ']'               [reduce usando la regla 208 (expB)]
+    $default          reduce usando la regla 178 (expI)
+
+
+Estado 283
+
+  153 declVS: IDENTIF '=' '[' vsContent ']' $@20 .
+
+    $default  reduce usando la regla 153 (declVS)
+
+
+Estado 284
+
+  165 declVB: IDENTIF '=' '[' vbContent ']' $@24 .
+
+    $default  reduce usando la regla 165 (declVB)
+
+
+Estado 285
+
+  157 vsContent: expS $@21 ',' . vsContent
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    vsContent  ir al estado 326
+    expI       ir al estado 134
+    expS       ir al estado 327
+
+
+Estado 286
+
+  169 vbContent: expB $@25 ',' . vbContent
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    vbContent  ir al estado 328
+    expI       ir al estado 94
+    expS       ir al estado 95
+    expB       ir al estado 173
+    expC       ir al estado 97
+
+
+Estado 287
+
+  129 declVI: IDENTIF '=' $@12 '[' viContent ']' .
+
+    $default  reduce usando la regla 129 (declVI)
+
+
+Estado 288
+
+  133 viContent: expI $@13 . ',' viContent
+
+    ','  desplazar e ir al estado 329
+
+
+Estado 289
+
+  130 declVI: IDENTIF '[' expI ']' '=' expI .
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  181 expS: expI . '*' expS
+  190 expB: expI . EQUIVALENT expI
+  194     | expI . EQUIVALENTNOT expI
+  197     | expI . BIGGEREQUALTHAN expI
+  199     | expI . SMALLEREQUALTHAN expI
+  202     | expI . '>' expI
+  204     | expI . '<' expI
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 145
+    BIGGEREQUALTHAN   desplazar e ir al estado 146
+    EQUIVALENT        desplazar e ir al estado 147
+    EQUIVALENTNOT     desplazar e ir al estado 148
+    '>'               desplazar e ir al estado 149
+    '<'               desplazar e ir al estado 150
+    '+'               desplazar e ir al estado 113
+    '-'               desplazar e ir al estado 114
+    '*'               desplazar e ir al estado 151
+    '/'               desplazar e ir al estado 116
+    '^'               desplazar e ir al estado 117
+
+    $default  reduce usando la regla 130 (declVI)
+
+
+Estado 290
+
+  154 declVS: IDENTIF '[' expI ']' '=' expS .
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  192 expB: expS . EQUIVALENT expS
+  196     | expS . EQUIVALENTNOT expS
+  198     | expS . BIGGEREQUALTHAN expS
+  200     | expS . SMALLEREQUALTHAN expS
+  201     | expS . '>' expS
+  203     | expS . '<' expS
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 153
+    BIGGEREQUALTHAN   desplazar e ir al estado 154
+    EQUIVALENT        desplazar e ir al estado 155
+    EQUIVALENTNOT     desplazar e ir al estado 156
+    '>'               desplazar e ir al estado 157
+    '<'               desplazar e ir al estado 158
+    '+'               desplazar e ir al estado 159
+    '*'               desplazar e ir al estado 160
+
+    $default  reduce usando la regla 154 (declVS)
+
+
+Estado 291
+
+  166 declVB: IDENTIF '[' expI ']' '=' expB .
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+
+    $default  reduce usando la regla 166 (declVB)
+
+
+Estado 292
+
+  142 declVC: IDENTIF '[' expI ']' '=' expC .
+  191 expB: expC . EQUIVALENT expC
+  195     | expC . EQUIVALENTNOT expC
+
+    EQUIVALENT     desplazar e ir al estado 167
+    EQUIVALENTNOT  desplazar e ir al estado 168
+
+    $default  reduce usando la regla 142 (declVC)
+
+
+Estado 293
+
+   72 ifStructure: IFCOND '(' expB ')' '{' ifBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 330
+
+
+Estado 294
+
+   87 loopStructure: FOR '(' expI ';' expB ';' . expI ')' '{' loopBlockEmpty '}'
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    expI  ir al estado 331
+
+
+Estado 295
+
+   89 loopStructure: WHILELOOP '(' expB ')' '{' loopBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 332
+
+
+Estado 296
+
+   92 loopBlockEmpty: $@9 . loopBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+    BREAK      desplazar e ir al estado 253
+    CONTINUE   desplazar e ir al estado 254
+
+    functionStructure      ir al estado 333
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 334
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 335
+    loopBlock              ir al estado 336
+    instr                  ir al estado 337
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 297
+
+   88 loopStructure: DOLOOP '(' expB ')' '{' loopBlockEmpty . '}' WHILELOOP '(' expB ')' ';'
+
+    '}'  desplazar e ir al estado 338
+
+
+Estado 298
+
+   73 elifStructure: ELIF '(' expB ')' '{' . ifBlockEmpty '}'
+   74              | ELIF '(' expB ')' '{' . ifBlockEmpty '}' elifStructure
+
+    '}'       reduce usando la regla 76 (ifBlockEmpty)
+    $default  reduce usando la regla 77 ($@8)
+
+    ifBlockEmpty  ir al estado 339
+    $@8           ir al estado 182
+
+
+Estado 299
+
+   97 loopBlock: BREAK ';' .
+
+    $default  reduce usando la regla 97 (loopBlock)
+
+
+Estado 300
+
+   98 loopBlock: CONTINUE ';' .
+
+    $default  reduce usando la regla 98 (loopBlock)
+
+
+Estado 301
+
+   99 loopBlock: loopBlock BREAK . ';'
+
+    ';'  desplazar e ir al estado 340
+
+
+Estado 302
+
+  100 loopBlock: loopBlock CONTINUE . ';'
+
+    ';'  desplazar e ir al estado 341
+
+
+Estado 303
+
+   86 ifBlock: loopBlock functionStructure .
+  104 loopBlock: loopBlock functionStructure .
+
+    '}'       reduce usando la regla 86 (ifBlock)
+    $default  reduce usando la regla 104 (loopBlock)
+
+
+Estado 304
+
+   85 ifBlock: loopBlock conditionalStructure .
+  103 loopBlock: loopBlock conditionalStructure .
+
+    '}'       reduce usando la regla 85 (ifBlock)
+    $default  reduce usando la regla 103 (loopBlock)
+
+
+Estado 305
+
+   84 ifBlock: loopBlock loopStructure .
+  102 loopBlock: loopBlock loopStructure .
+
+    '}'       reduce usando la regla 84 (ifBlock)
+    $default  reduce usando la regla 102 (loopBlock)
+
+
+Estado 306
+
+   83 ifBlock: loopBlock instr .
+  101 loopBlock: loopBlock instr .
+
+    '}'       reduce usando la regla 83 (ifBlock)
+    $default  reduce usando la regla 101 (loopBlock)
+
+
+Estado 307
+
+   22 functionStructure: VOID IDENTIF $@5 '(' functionParameter ')' '{' . functionBlockEmpty '}'
+
+    '}'       reduce usando la regla 47 (functionBlockEmpty)
+    $default  reduce usando la regla 48 ($@7)
+
+    functionBlockEmpty  ir al estado 342
+    $@7                 ir al estado 343
+
+
+Estado 308
+
+   28 Parameter: INT IDENTIF .
+   32          | INT IDENTIF . ',' Parameter
+
+    ','  desplazar e ir al estado 344
+
+    $default  reduce usando la regla 28 (Parameter)
+
+
+Estado 309
+
+   29 Parameter: CHAR IDENTIF .
+   33          | CHAR IDENTIF . ',' Parameter
+
+    ','  desplazar e ir al estado 345
+
+    $default  reduce usando la regla 29 (Parameter)
+
+
+Estado 310
+
+   31 Parameter: BOOL IDENTIF .
+   35          | BOOL IDENTIF . ',' Parameter
+
+    ','  desplazar e ir al estado 346
+
+    $default  reduce usando la regla 31 (Parameter)
+
+
+Estado 311
+
+   30 Parameter: STRING IDENTIF .
+   34          | STRING IDENTIF . ',' Parameter
+
+    ','  desplazar e ir al estado 347
+
+    $default  reduce usando la regla 30 (Parameter)
+
+
+Estado 312
+
+   14 functionStructure: INT IDENTIF $@1 '(' functionParameter ')' '{' . functionBlockEmpty '}'
+
+    '}'       reduce usando la regla 47 (functionBlockEmpty)
+    $default  reduce usando la regla 48 ($@7)
+
+    functionBlockEmpty  ir al estado 348
+    $@7                 ir al estado 343
+
+
+Estado 313
+
+  123 declVI: INT '[' ']' IDENTIF '=' $@10 '[' . viContent ']'
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    viContent  ir al estado 349
+    expI       ir al estado 245
+
+
+Estado 314
+
+  126 declVI: INT '[' expI ']' IDENTIF '=' $@11 . '[' viContent ']'
+
+    '['  desplazar e ir al estado 350
+
+
+Estado 315
+
+  211 expC: IDENTIF '[' NUMBER ']' .
+
+    $default  reduce usando la regla 211 (expC)
+
+
+Estado 316
+
+   16 functionStructure: CHAR IDENTIF $@2 '(' functionParameter ')' '{' . functionBlockEmpty '}'
+
+    '}'       reduce usando la regla 47 (functionBlockEmpty)
+    $default  reduce usando la regla 48 ($@7)
+
+    functionBlockEmpty  ir al estado 351
+    $@7                 ir al estado 343
+
+
+Estado 317
+
+  135 declVC: CHAR '[' ']' IDENTIF '=' $@14 '[' . vcContent ']'
+
+    CHARACTER  desplazar e ir al estado 78
+    IDENTIF    desplazar e ir al estado 236
+
+    vcContent  ir al estado 352
+    expC       ir al estado 353
+
+
+Estado 318
+
+  138 declVC: CHAR '[' expI ']' IDENTIF '=' $@15 . '[' vcContent ']'
+
+    '['  desplazar e ir al estado 354
+
+
+Estado 319
+
+   18 functionStructure: BOOL IDENTIF $@3 '(' functionParameter ')' '{' . functionBlockEmpty '}'
+
+    '}'       reduce usando la regla 47 (functionBlockEmpty)
+    $default  reduce usando la regla 48 ($@7)
+
+    functionBlockEmpty  ir al estado 355
+    $@7                 ir al estado 343
+
+
+Estado 320
+
+  159 declVB: BOOL '[' ']' IDENTIF '=' $@22 '[' . vbContent ']'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    vbContent  ir al estado 356
+    expI       ir al estado 94
+    expS       ir al estado 95
+    expB       ir al estado 173
+    expC       ir al estado 97
+
+
+Estado 321
+
+  162 declVB: BOOL '[' expI ']' IDENTIF '=' $@23 . '[' vbContent ']'
+
+    '['  desplazar e ir al estado 357
+
+
+Estado 322
+
+  178 expI: IDENTIF '[' NUMBER ']' .
+  185 expS: IDENTIF '[' NUMBER ']' .
+
+    SMALLEREQUALTHAN  reduce usando la regla 178 (expI)
+    SMALLEREQUALTHAN  [reduce usando la regla 185 (expS)]
+    BIGGEREQUALTHAN   reduce usando la regla 178 (expI)
+    BIGGEREQUALTHAN   [reduce usando la regla 185 (expS)]
+    EQUIVALENT        reduce usando la regla 178 (expI)
+    EQUIVALENT        [reduce usando la regla 185 (expS)]
+    EQUIVALENTNOT     reduce usando la regla 178 (expI)
+    EQUIVALENTNOT     [reduce usando la regla 185 (expS)]
+    AND               reduce usando la regla 185 (expS)
+    OR                reduce usando la regla 185 (expS)
+    '>'               reduce usando la regla 178 (expI)
+    '>'               [reduce usando la regla 185 (expS)]
+    '<'               reduce usando la regla 178 (expI)
+    '<'               [reduce usando la regla 185 (expS)]
+    '+'               reduce usando la regla 178 (expI)
+    '+'               [reduce usando la regla 185 (expS)]
+    '*'               reduce usando la regla 178 (expI)
+    '*'               [reduce usando la regla 185 (expS)]
+    ')'               reduce usando la regla 178 (expI)
+    ')'               [reduce usando la regla 185 (expS)]
+    ';'               reduce usando la regla 178 (expI)
+    ';'               [reduce usando la regla 185 (expS)]
+    ','               reduce usando la regla 178 (expI)
+    ','               [reduce usando la regla 185 (expS)]
+    ']'               reduce usando la regla 185 (expS)
+    $default          reduce usando la regla 178 (expI)
+
+
+Estado 323
+
+   20 functionStructure: STRING IDENTIF $@4 '(' functionParameter ')' '{' . functionBlockEmpty '}'
+
+    '}'       reduce usando la regla 47 (functionBlockEmpty)
+    $default  reduce usando la regla 48 ($@7)
+
+    functionBlockEmpty  ir al estado 358
+    $@7                 ir al estado 343
+
+
+Estado 324
+
+  147 declVS: STRING '[' ']' IDENTIF '=' $@18 '[' . vsContent ']'
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    vsContent  ir al estado 359
+    expI       ir al estado 134
+    expS       ir al estado 327
+
+
+Estado 325
+
+  150 declVS: STRING '[' expI ']' IDENTIF '=' $@19 . '[' vsContent ']'
+
+    '['  desplazar e ir al estado 360
+
+
+Estado 326
+
+  157 vsContent: expS $@21 ',' vsContent .
+
+    $default  reduce usando la regla 157 (vsContent)
+
+
+Estado 327
+
+  155 vsContent: expS .
+  157          | expS . $@21 ',' vsContent
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+
+    '+'  desplazar e ir al estado 159
+    '*'  desplazar e ir al estado 160
+
+    ','       reduce usando la regla 156 ($@21)
+    $default  reduce usando la regla 155 (vsContent)
+
+    $@21  ir al estado 242
+
+
+Estado 328
+
+  169 vbContent: expB $@25 ',' vbContent .
+
+    $default  reduce usando la regla 169 (vbContent)
+
+
+Estado 329
+
+  133 viContent: expI $@13 ',' . viContent
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    viContent  ir al estado 361
+    expI       ir al estado 245
+
+
+Estado 330
+
+   72 ifStructure: IFCOND '(' expB ')' '{' ifBlockEmpty '}' .
+
+    $default  reduce usando la regla 72 (ifStructure)
+
+
+Estado 331
+
+   87 loopStructure: FOR '(' expI ';' expB ';' expI . ')' '{' loopBlockEmpty '}'
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+
+    '+'  desplazar e ir al estado 113
+    '-'  desplazar e ir al estado 114
+    '*'  desplazar e ir al estado 115
+    '/'  desplazar e ir al estado 116
+    '^'  desplazar e ir al estado 117
+    ')'  desplazar e ir al estado 362
+
+
+Estado 332
+
+   89 loopStructure: WHILELOOP '(' expB ')' '{' loopBlockEmpty '}' .
+
+    $default  reduce usando la regla 89 (loopStructure)
+
+
+Estado 333
+
+   95 loopBlock: functionStructure .
+
+    $default  reduce usando la regla 95 (loopBlock)
+
+
+Estado 334
+
+   94 loopBlock: conditionalStructure .
+
+    $default  reduce usando la regla 94 (loopBlock)
+
+
+Estado 335
+
+   93 loopBlock: loopStructure .
+
+    $default  reduce usando la regla 93 (loopBlock)
+
+
+Estado 336
+
+   92 loopBlockEmpty: $@9 loopBlock .
+   99 loopBlock: loopBlock . BREAK ';'
+  100          | loopBlock . CONTINUE ';'
+  101          | loopBlock . instr
+  102          | loopBlock . loopStructure
+  103          | loopBlock . conditionalStructure
+  104          | loopBlock . functionStructure
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+    BREAK      desplazar e ir al estado 301
+    CONTINUE   desplazar e ir al estado 302
+
+    $default  reduce usando la regla 92 (loopBlockEmpty)
+
+    functionStructure      ir al estado 363
+    functionCallStructure  ir al estado 15
+    conditionalStructure   ir al estado 364
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 365
+    instr                  ir al estado 366
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 337
+
+   96 loopBlock: instr .
+
+    $default  reduce usando la regla 96 (loopBlock)
+
+
+Estado 338
+
+   88 loopStructure: DOLOOP '(' expB ')' '{' loopBlockEmpty '}' . WHILELOOP '(' expB ')' ';'
+
+    WHILELOOP  desplazar e ir al estado 367
+
+
+Estado 339
+
+   73 elifStructure: ELIF '(' expB ')' '{' ifBlockEmpty . '}'
+   74              | ELIF '(' expB ')' '{' ifBlockEmpty . '}' elifStructure
+
+    '}'  desplazar e ir al estado 368
+
+
+Estado 340
+
+   99 loopBlock: loopBlock BREAK ';' .
+
+    $default  reduce usando la regla 99 (loopBlock)
+
+
+Estado 341
+
+  100 loopBlock: loopBlock CONTINUE ';' .
+
+    $default  reduce usando la regla 100 (loopBlock)
+
+
+Estado 342
+
+   22 functionStructure: VOID IDENTIF $@5 '(' functionParameter ')' '{' functionBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 369
+
+
+Estado 343
+
+   49 functionBlockEmpty: $@7 . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 372
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 344
+
+   32 Parameter: INT IDENTIF ',' . Parameter
+
+    INT     desplazar e ir al estado 262
+    CHAR    desplazar e ir al estado 263
+    BOOL    desplazar e ir al estado 264
+    STRING  desplazar e ir al estado 265
+
+    Parameter  ir al estado 376
+
+
+Estado 345
+
+   33 Parameter: CHAR IDENTIF ',' . Parameter
+
+    INT     desplazar e ir al estado 262
+    CHAR    desplazar e ir al estado 263
+    BOOL    desplazar e ir al estado 264
+    STRING  desplazar e ir al estado 265
+
+    Parameter  ir al estado 377
+
+
+Estado 346
+
+   35 Parameter: BOOL IDENTIF ',' . Parameter
+
+    INT     desplazar e ir al estado 262
+    CHAR    desplazar e ir al estado 263
+    BOOL    desplazar e ir al estado 264
+    STRING  desplazar e ir al estado 265
+
+    Parameter  ir al estado 378
+
+
+Estado 347
+
+   34 Parameter: STRING IDENTIF ',' . Parameter
+
+    INT     desplazar e ir al estado 262
+    CHAR    desplazar e ir al estado 263
+    BOOL    desplazar e ir al estado 264
+    STRING  desplazar e ir al estado 265
+
+    Parameter  ir al estado 379
+
+
+Estado 348
+
+   14 functionStructure: INT IDENTIF $@1 '(' functionParameter ')' '{' functionBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 380
+
+
+Estado 349
+
+  123 declVI: INT '[' ']' IDENTIF '=' $@10 '[' viContent . ']'
+
+    ']'  desplazar e ir al estado 381
+
+
+Estado 350
+
+  126 declVI: INT '[' expI ']' IDENTIF '=' $@11 '[' . viContent ']'
+
+    NUMBER   desplazar e ir al estado 60
+    IDENTIF  desplazar e ir al estado 61
+    '-'      desplazar e ir al estado 62
+    '('      desplazar e ir al estado 63
+
+    viContent  ir al estado 382
+    expI       ir al estado 245
+
+
+Estado 351
+
+   16 functionStructure: CHAR IDENTIF $@2 '(' functionParameter ')' '{' functionBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 383
+
+
+Estado 352
+
+  135 declVC: CHAR '[' ']' IDENTIF '=' $@14 '[' vcContent . ']'
+
+    ']'  desplazar e ir al estado 384
+
+
+Estado 353
+
+  143 vcContent: expC .
+  145          | expC . $@17 ',' vcContent
+
+    ','       reduce usando la regla 144 ($@17)
+    $default  reduce usando la regla 143 (vcContent)
+
+    $@17  ir al estado 385
+
+
+Estado 354
+
+  138 declVC: CHAR '[' expI ']' IDENTIF '=' $@15 '[' . vcContent ']'
+
+    CHARACTER  desplazar e ir al estado 78
+    IDENTIF    desplazar e ir al estado 236
+
+    vcContent  ir al estado 386
+    expC       ir al estado 353
+
+
+Estado 355
+
+   18 functionStructure: BOOL IDENTIF $@3 '(' functionParameter ')' '{' functionBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 387
+
+
+Estado 356
+
+  159 declVB: BOOL '[' ']' IDENTIF '=' $@22 '[' vbContent . ']'
+
+    ']'  desplazar e ir al estado 388
+
+
+Estado 357
+
+  162 declVB: BOOL '[' expI ']' IDENTIF '=' $@23 '[' . vbContent ']'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    vbContent  ir al estado 389
+    expI       ir al estado 94
+    expS       ir al estado 95
+    expB       ir al estado 173
+    expC       ir al estado 97
+
+
+Estado 358
+
+   20 functionStructure: STRING IDENTIF $@4 '(' functionParameter ')' '{' functionBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 390
+
+
+Estado 359
+
+  147 declVS: STRING '[' ']' IDENTIF '=' $@18 '[' vsContent . ']'
+
+    ']'  desplazar e ir al estado 391
+
+
+Estado 360
+
+  150 declVS: STRING '[' expI ']' IDENTIF '=' $@19 '[' . vsContent ']'
+
+    NUMBER         desplazar e ir al estado 60
+    IDENTIF        desplazar e ir al estado 203
+    STRINGLITERAL  desplazar e ir al estado 80
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 132
+
+    vsContent  ir al estado 392
+    expI       ir al estado 134
+    expS       ir al estado 327
+
+
+Estado 361
+
+  133 viContent: expI $@13 ',' viContent .
+
+    $default  reduce usando la regla 133 (viContent)
+
+
+Estado 362
+
+   87 loopStructure: FOR '(' expI ';' expB ';' expI ')' . '{' loopBlockEmpty '}'
+
+    '{'  desplazar e ir al estado 393
+
+
+Estado 363
+
+  104 loopBlock: loopBlock functionStructure .
+
+    $default  reduce usando la regla 104 (loopBlock)
+
+
+Estado 364
+
+  103 loopBlock: loopBlock conditionalStructure .
+
+    $default  reduce usando la regla 103 (loopBlock)
+
+
+Estado 365
+
+  102 loopBlock: loopBlock loopStructure .
+
+    $default  reduce usando la regla 102 (loopBlock)
+
+
+Estado 366
+
+  101 loopBlock: loopBlock instr .
+
+    $default  reduce usando la regla 101 (loopBlock)
+
+
+Estado 367
+
+   88 loopStructure: DOLOOP '(' expB ')' '{' loopBlockEmpty '}' WHILELOOP . '(' expB ')' ';'
+
+    '('  desplazar e ir al estado 394
+
+
+Estado 368
+
+   73 elifStructure: ELIF '(' expB ')' '{' ifBlockEmpty '}' .
+   74              | ELIF '(' expB ')' '{' ifBlockEmpty '}' . elifStructure
+
+    ELIF  desplazar e ir al estado 46
+
+    $default  reduce usando la regla 73 (elifStructure)
+
+    elifStructure  ir al estado 395
+
+
+Estado 369
+
+   22 functionStructure: VOID IDENTIF $@5 '(' functionParameter ')' '{' functionBlockEmpty '}' .
+
+    $default  reduce usando la regla 22 (functionStructure)
+
+
+Estado 370
+
+   54 functionBlock: RETURN . IDENTIF ';'
+   55              | RETURN . expI ';'
+   56              | RETURN . expB ';'
+   57              | RETURN . expC ';'
+   58              | RETURN . expS ';'
+   60              | RETURN . IDENTIF ';' functionBlock
+   61              | RETURN . expI ';' functionBlock
+   62              | RETURN . expB ';' functionBlock
+   63              | RETURN . expC ';' functionBlock
+   64              | RETURN . expS ';' functionBlock
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 396
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 397
+    expS  ir al estado 398
+    expB  ir al estado 399
+    expC  ir al estado 400
+
+
+Estado 371
+
+   52 functionBlock: functionStructure .
+   67              | functionStructure . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 52 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 401
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 372
+
+   49 functionBlockEmpty: $@7 functionBlock .
+
+    $default  reduce usando la regla 49 (functionBlockEmpty)
+
+
+Estado 373
+
+   51 functionBlock: conditionalStructure .
+   66              | conditionalStructure . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 51 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 402
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 374
+
+   50 functionBlock: loopStructure .
+   65              | loopStructure . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 50 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 403
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 375
+
+   53 functionBlock: instr .
+   59              | instr . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 53 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 404
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 376
+
+   32 Parameter: INT IDENTIF ',' Parameter .
+
+    $default  reduce usando la regla 32 (Parameter)
+
+
+Estado 377
+
+   33 Parameter: CHAR IDENTIF ',' Parameter .
+
+    $default  reduce usando la regla 33 (Parameter)
+
+
+Estado 378
+
+   35 Parameter: BOOL IDENTIF ',' Parameter .
+
+    $default  reduce usando la regla 35 (Parameter)
+
+
+Estado 379
+
+   34 Parameter: STRING IDENTIF ',' Parameter .
+
+    $default  reduce usando la regla 34 (Parameter)
+
+
+Estado 380
+
+   14 functionStructure: INT IDENTIF $@1 '(' functionParameter ')' '{' functionBlockEmpty '}' .
+
+    $default  reduce usando la regla 14 (functionStructure)
+
+
+Estado 381
+
+  123 declVI: INT '[' ']' IDENTIF '=' $@10 '[' viContent ']' .
+
+    $default  reduce usando la regla 123 (declVI)
+
+
+Estado 382
+
+  126 declVI: INT '[' expI ']' IDENTIF '=' $@11 '[' viContent . ']'
+
+    ']'  desplazar e ir al estado 405
+
+
+Estado 383
+
+   16 functionStructure: CHAR IDENTIF $@2 '(' functionParameter ')' '{' functionBlockEmpty '}' .
+
+    $default  reduce usando la regla 16 (functionStructure)
+
+
+Estado 384
+
+  135 declVC: CHAR '[' ']' IDENTIF '=' $@14 '[' vcContent ']' .
+
+    $default  reduce usando la regla 135 (declVC)
+
+
+Estado 385
+
+  145 vcContent: expC $@17 . ',' vcContent
+
+    ','  desplazar e ir al estado 406
+
+
+Estado 386
+
+  138 declVC: CHAR '[' expI ']' IDENTIF '=' $@15 '[' vcContent . ']'
+
+    ']'  desplazar e ir al estado 407
+
+
+Estado 387
+
+   18 functionStructure: BOOL IDENTIF $@3 '(' functionParameter ')' '{' functionBlockEmpty '}' .
+
+    $default  reduce usando la regla 18 (functionStructure)
+
+
+Estado 388
+
+  159 declVB: BOOL '[' ']' IDENTIF '=' $@22 '[' vbContent ']' .
+
+    $default  reduce usando la regla 159 (declVB)
+
+
+Estado 389
+
+  162 declVB: BOOL '[' expI ']' IDENTIF '=' $@23 '[' vbContent . ']'
+
+    ']'  desplazar e ir al estado 408
+
+
+Estado 390
+
+   20 functionStructure: STRING IDENTIF $@4 '(' functionParameter ')' '{' functionBlockEmpty '}' .
+
+    $default  reduce usando la regla 20 (functionStructure)
+
+
+Estado 391
+
+  147 declVS: STRING '[' ']' IDENTIF '=' $@18 '[' vsContent ']' .
+
+    $default  reduce usando la regla 147 (declVS)
+
+
+Estado 392
+
+  150 declVS: STRING '[' expI ']' IDENTIF '=' $@19 '[' vsContent . ']'
+
+    ']'  desplazar e ir al estado 409
+
+
+Estado 393
+
+   87 loopStructure: FOR '(' expI ';' expB ';' expI ')' '{' . loopBlockEmpty '}'
+
+    '}'       reduce usando la regla 90 (loopBlockEmpty)
+    $default  reduce usando la regla 91 ($@9)
+
+    loopBlockEmpty  ir al estado 410
+    $@9             ir al estado 296
+
+
+Estado 394
+
+   88 loopStructure: DOLOOP '(' expB ')' '{' loopBlockEmpty '}' WHILELOOP '(' . expB ')' ';'
+
+    NUMBER         desplazar e ir al estado 60
+    CHARACTER      desplazar e ir al estado 78
+    IDENTIF        desplazar e ir al estado 93
+    STRINGLITERAL  desplazar e ir al estado 80
+    TRUE           desplazar e ir al estado 81
+    FALSE          desplazar e ir al estado 82
+    '-'            desplazar e ir al estado 62
+    '('            desplazar e ir al estado 83
+
+    expI  ir al estado 94
+    expS  ir al estado 95
+    expB  ir al estado 411
+    expC  ir al estado 97
+
+
+Estado 395
+
+   74 elifStructure: ELIF '(' expB ')' '{' ifBlockEmpty '}' elifStructure .
+
+    $default  reduce usando la regla 74 (elifStructure)
+
+
+Estado 396
+
+   54 functionBlock: RETURN IDENTIF . ';'
+   60              | RETURN IDENTIF . ';' functionBlock
+  178 expI: IDENTIF . '[' NUMBER ']'
+  179     | IDENTIF .
+  185 expS: IDENTIF . '[' NUMBER ']'
+  186     | IDENTIF .
+  208 expB: IDENTIF . '[' NUMBER ']'
+  209     | IDENTIF .
+  211 expC: IDENTIF . '[' NUMBER ']'
+  212     | IDENTIF .
+
+    ';'  desplazar e ir al estado 412
+    '['  desplazar e ir al estado 140
+
+    SMALLEREQUALTHAN  reduce usando la regla 179 (expI)
+    SMALLEREQUALTHAN  [reduce usando la regla 186 (expS)]
+    BIGGEREQUALTHAN   reduce usando la regla 179 (expI)
+    BIGGEREQUALTHAN   [reduce usando la regla 186 (expS)]
+    EQUIVALENT        reduce usando la regla 179 (expI)
+    EQUIVALENT        [reduce usando la regla 186 (expS)]
+    EQUIVALENT        [reduce usando la regla 209 (expB)]
+    EQUIVALENT        [reduce usando la regla 212 (expC)]
+    EQUIVALENTNOT     reduce usando la regla 179 (expI)
+    EQUIVALENTNOT     [reduce usando la regla 186 (expS)]
+    EQUIVALENTNOT     [reduce usando la regla 209 (expB)]
+    EQUIVALENTNOT     [reduce usando la regla 212 (expC)]
+    AND               reduce usando la regla 209 (expB)
+    OR                reduce usando la regla 209 (expB)
+    '>'               reduce usando la regla 179 (expI)
+    '>'               [reduce usando la regla 186 (expS)]
+    '<'               reduce usando la regla 179 (expI)
+    '<'               [reduce usando la regla 186 (expS)]
+    '+'               reduce usando la regla 179 (expI)
+    '+'               [reduce usando la regla 186 (expS)]
+    '*'               reduce usando la regla 179 (expI)
+    '*'               [reduce usando la regla 186 (expS)]
+    ';'               [reduce usando la regla 179 (expI)]
+    ';'               [reduce usando la regla 186 (expS)]
+    ';'               [reduce usando la regla 209 (expB)]
+    ';'               [reduce usando la regla 212 (expC)]
+    $default          reduce usando la regla 179 (expI)
+
+
+Estado 397
+
+   55 functionBlock: RETURN expI . ';'
+   61              | RETURN expI . ';' functionBlock
+  170 expI: expI . '+' expI
+  171     | expI . '-' expI
+  172     | expI . '*' expI
+  173     | expI . '/' expI
+  174     | expI . '^' expI
+  181 expS: expI . '*' expS
+  190 expB: expI . EQUIVALENT expI
+  194     | expI . EQUIVALENTNOT expI
+  197     | expI . BIGGEREQUALTHAN expI
+  199     | expI . SMALLEREQUALTHAN expI
+  202     | expI . '>' expI
+  204     | expI . '<' expI
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 145
+    BIGGEREQUALTHAN   desplazar e ir al estado 146
+    EQUIVALENT        desplazar e ir al estado 147
+    EQUIVALENTNOT     desplazar e ir al estado 148
+    '>'               desplazar e ir al estado 149
+    '<'               desplazar e ir al estado 150
+    '+'               desplazar e ir al estado 113
+    '-'               desplazar e ir al estado 114
+    '*'               desplazar e ir al estado 151
+    '/'               desplazar e ir al estado 116
+    '^'               desplazar e ir al estado 117
+    ';'               desplazar e ir al estado 413
+
+
+Estado 398
+
+   58 functionBlock: RETURN expS . ';'
+   64              | RETURN expS . ';' functionBlock
+  180 expS: expS . '+' expS
+  182     | expS . '*' expI
+  192 expB: expS . EQUIVALENT expS
+  196     | expS . EQUIVALENTNOT expS
+  198     | expS . BIGGEREQUALTHAN expS
+  200     | expS . SMALLEREQUALTHAN expS
+  201     | expS . '>' expS
+  203     | expS . '<' expS
+
+    SMALLEREQUALTHAN  desplazar e ir al estado 153
+    BIGGEREQUALTHAN   desplazar e ir al estado 154
+    EQUIVALENT        desplazar e ir al estado 155
+    EQUIVALENTNOT     desplazar e ir al estado 156
+    '>'               desplazar e ir al estado 157
+    '<'               desplazar e ir al estado 158
+    '+'               desplazar e ir al estado 159
+    '*'               desplazar e ir al estado 160
+    ';'               desplazar e ir al estado 414
+
+
+Estado 399
+
+   56 functionBlock: RETURN expB . ';'
+   62              | RETURN expB . ';' functionBlock
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ';'            desplazar e ir al estado 415
+
+
+Estado 400
+
+   57 functionBlock: RETURN expC . ';'
+   63              | RETURN expC . ';' functionBlock
+  191 expB: expC . EQUIVALENT expC
+  195     | expC . EQUIVALENTNOT expC
+
+    EQUIVALENT     desplazar e ir al estado 167
+    EQUIVALENTNOT  desplazar e ir al estado 168
+    ';'            desplazar e ir al estado 416
+
+
+Estado 401
+
+   67 functionBlock: functionStructure functionBlock .
+
+    $default  reduce usando la regla 67 (functionBlock)
+
+
+Estado 402
+
+   66 functionBlock: conditionalStructure functionBlock .
+
+    $default  reduce usando la regla 66 (functionBlock)
+
+
+Estado 403
+
+   65 functionBlock: loopStructure functionBlock .
+
+    $default  reduce usando la regla 65 (functionBlock)
+
+
+Estado 404
+
+   59 functionBlock: instr functionBlock .
+
+    $default  reduce usando la regla 59 (functionBlock)
+
+
+Estado 405
+
+  126 declVI: INT '[' expI ']' IDENTIF '=' $@11 '[' viContent ']' .
+
+    $default  reduce usando la regla 126 (declVI)
+
+
+Estado 406
+
+  145 vcContent: expC $@17 ',' . vcContent
+
+    CHARACTER  desplazar e ir al estado 78
+    IDENTIF    desplazar e ir al estado 236
+
+    vcContent  ir al estado 417
+    expC       ir al estado 353
+
+
+Estado 407
+
+  138 declVC: CHAR '[' expI ']' IDENTIF '=' $@15 '[' vcContent ']' .
+
+    $default  reduce usando la regla 138 (declVC)
+
+
+Estado 408
+
+  162 declVB: BOOL '[' expI ']' IDENTIF '=' $@23 '[' vbContent ']' .
+
+    $default  reduce usando la regla 162 (declVB)
+
+
+Estado 409
+
+  150 declVS: STRING '[' expI ']' IDENTIF '=' $@19 '[' vsContent ']' .
+
+    $default  reduce usando la regla 150 (declVS)
+
+
+Estado 410
+
+   87 loopStructure: FOR '(' expI ';' expB ';' expI ')' '{' loopBlockEmpty . '}'
+
+    '}'  desplazar e ir al estado 418
+
+
+Estado 411
+
+   88 loopStructure: DOLOOP '(' expB ')' '{' loopBlockEmpty '}' WHILELOOP '(' expB . ')' ';'
+  187 expB: expB . AND expB
+  188     | expB . OR expB
+  189     | expB . EQUIVALENT expB
+  193     | expB . EQUIVALENTNOT expB
+
+    EQUIVALENT     desplazar e ir al estado 162
+    EQUIVALENTNOT  desplazar e ir al estado 163
+    AND            desplazar e ir al estado 164
+    OR             desplazar e ir al estado 165
+    ')'            desplazar e ir al estado 419
+
+
+Estado 412
+
+   54 functionBlock: RETURN IDENTIF ';' .
+   60              | RETURN IDENTIF ';' . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 54 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 420
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 413
+
+   55 functionBlock: RETURN expI ';' .
+   61              | RETURN expI ';' . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 55 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 421
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 414
+
+   58 functionBlock: RETURN expS ';' .
+   64              | RETURN expS ';' . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 58 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 422
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 415
+
+   56 functionBlock: RETURN expB ';' .
+   62              | RETURN expB ';' . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 56 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 423
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 416
+
+   57 functionBlock: RETURN expC ';' .
+   63              | RETURN expC ';' . functionBlock
+
+    VOID       desplazar e ir al estado 2
+    INT        desplazar e ir al estado 3
+    CHAR       desplazar e ir al estado 4
+    BOOL       desplazar e ir al estado 5
+    STRING     desplazar e ir al estado 6
+    IDENTIF    desplazar e ir al estado 7
+    RETURN     desplazar e ir al estado 370
+    IFCOND     desplazar e ir al estado 8
+    FOR        desplazar e ir al estado 9
+    WHILELOOP  desplazar e ir al estado 10
+    DOLOOP     desplazar e ir al estado 11
+
+    $default  reduce usando la regla 57 (functionBlock)
+
+    functionStructure      ir al estado 371
+    functionCallStructure  ir al estado 15
+    functionBlock          ir al estado 424
+    conditionalStructure   ir al estado 373
+    ifStructure            ir al estado 17
+    loopStructure          ir al estado 374
+    instr                  ir al estado 375
+    dexp                   ir al estado 20
+    declVI                 ir al estado 21
+    declVC                 ir al estado 22
+    declVS                 ir al estado 23
+    declVB                 ir al estado 24
+
+
+Estado 417
+
+  145 vcContent: expC $@17 ',' vcContent .
+
+    $default  reduce usando la regla 145 (vcContent)
+
+
+Estado 418
+
+   87 loopStructure: FOR '(' expI ';' expB ';' expI ')' '{' loopBlockEmpty '}' .
+
+    $default  reduce usando la regla 87 (loopStructure)
+
+
+Estado 419
+
+   88 loopStructure: DOLOOP '(' expB ')' '{' loopBlockEmpty '}' WHILELOOP '(' expB ')' . ';'
+
+    ';'  desplazar e ir al estado 425
+
+
+Estado 420
+
+   60 functionBlock: RETURN IDENTIF ';' functionBlock .
+
+    $default  reduce usando la regla 60 (functionBlock)
+
+
+Estado 421
+
+   61 functionBlock: RETURN expI ';' functionBlock .
+
+    $default  reduce usando la regla 61 (functionBlock)
+
+
+Estado 422
+
+   64 functionBlock: RETURN expS ';' functionBlock .
+
+    $default  reduce usando la regla 64 (functionBlock)
+
+
+Estado 423
+
+   62 functionBlock: RETURN expB ';' functionBlock .
+
+    $default  reduce usando la regla 62 (functionBlock)
+
+
+Estado 424
+
+   63 functionBlock: RETURN expC ';' functionBlock .
+
+    $default  reduce usando la regla 63 (functionBlock)
+
+
+Estado 425
+
+   88 loopStructure: DOLOOP '(' expB ')' '{' loopBlockEmpty '}' WHILELOOP '(' expB ')' ';' .
+
+    $default  reduce usando la regla 88 (loopStructure)
